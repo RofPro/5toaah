@@ -134,7 +134,7 @@
             display: grid;
             grid-template-columns: 1fr 1.7fr;
             gap: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 16px; /* تم زيادة المسافة لمنع أي تداخل */
         }
 
         /* بطاقة الطفل */
@@ -273,7 +273,7 @@
             gap: 8px;
             font-size: 13px;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 12px; /* مسافة واضحة بعد العنوان */
         }
 
         .services-grid-box {
@@ -485,10 +485,9 @@
             .sidebar { display: none; }
             .main-wrapper { margin-right: 0; padding-bottom: 20px; }
             .app-content { padding: 5px 12px 15px 12px; }
-            .dashboard-grid-top { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
+            .dashboard-grid-top { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
             .services-grid-box { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             
-            /* الشريط السفلي يظهر فقط عند استدعائه بالشروط */
             .bottom-navigation.show-nav {
                 position: fixed; bottom: 0; left: 0; width: 100%;
                 background-color: #ffffff; padding: 6px 10px;
@@ -570,7 +569,7 @@
                     </div>
                 </div>
 
-                <!-- الأقسام والخدمات الرئيسية (تظهر حصرياً في الرئيسية) -->
+                <!-- الأقسام والخدمات الرئيسية (منفصلة تماماً بدون أي تداخل) -->
                 <div class="section-title-wrapper"><i class="fa-solid fa-layer-group"></i> الأقسام والخدمات الرئيسية</div>
                 
                 <div class="services-grid-box" style="margin-bottom: 10px;">
@@ -604,24 +603,14 @@
                 </div>
             </div>
 
-            <!-- 2. شاشة المواعيد -->
+            <!-- 2. شاشة المواعيد (تعرض جميع المواعيد المحجوزة خلال الأيام القادمة) -->
             <div id="appointments-screen" class="app-content">
                 <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')">
                     <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
                 </div>
-                <div class="page-header-title">المواعيد المحجوزة</div>
+                <div class="page-header-title">المواعيد المحجوزة القادمة</div>
                 <div id="appointments-list-container">
-                    <div class="card-box" style="border-right: 5px solid #0284c7;">
-                        <h4 id="apt-service-title" style="color: #0284c7; margin-bottom: 4px; font-weight:800;">جلسة علاج طبيعي</h4>
-                        <p style="font-size: 13px; color: #475569;">الطفل: <span id="apt-child-name">سعود</span></p>
-                        <p style="font-size: 13px; color: #475569;">التاريخ والموعد: <span id="apt-date-text">الإثنين 12 أكتوبر 2026 - 10:00 صباحاً</span></p>
-                        <p style="font-size: 13px; color: #475569;">الفرع: <span id="apt-branch-text">الفرع الرئيسي - العاصمة</span></p>
-                        <p style="font-size: 13px; color: #475569;">الطبيب: <span id="apt-doctor-text">أ. ساره خالد</span></p>
-                        <div style="margin-top: 12px; display: flex; gap: 8px;">
-                            <button class="interactive-element" onclick="startBooking()" style="background:#0284c7; color:white; border:none; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">تعديل الموعد</button>
-                            <button class="interactive-element" onclick="cancelAppointment()" style="background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">إلغاء الموعد</button>
-                        </div>
-                    </div>
+                    <!-- تعبئة ديناميكية لجميع المواعيد المحجوزة -->
                 </div>
             </div>
 
@@ -631,9 +620,7 @@
                     <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
                 </div>
                 <div class="page-header-title">أطفالي المسجلين</div>
-                <div id="children-list-container">
-                    <!-- تعبئة ديناميكية -->
-                </div>
+                <div id="children-list-container"></div>
                 <button class="main-btn interactive-element" onclick="openAddChildModal()"><i class="fa-solid fa-plus"></i> إضافة طفل جديد</button>
             </div>
 
@@ -697,16 +684,13 @@
                 </div>
             </div>
 
-            <!-- 5. شاشة الفريق العلاجي / الدكاترة (جديد) -->
+            <!-- 5. شاشة الفريق العلاجي -->
             <div id="doctors-screen" class="app-content">
                 <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')">
                     <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
                 </div>
                 <div class="page-header-title">قائمة الفريق العلاجي والدكاترة</div>
-                
-                <div id="doctors-list-container">
-                    <!-- يتم تعبئتها ديناميكياً -->
-                </div>
+                <div id="doctors-list-container"></div>
             </div>
 
             <!-- 6. شاشة المزيد -->
@@ -723,7 +707,7 @@
                 </div>
             </div>
 
-            <!-- 7. شاشة حجز موعد -->
+            <!-- 7. شاشة حجز موعد جديد (مع التحقق من التداخلات) -->
             <div id="booking-screen" class="app-content">
                 <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')">
                     <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
@@ -802,7 +786,7 @@
                     </div>
 
                     <div class="dropdown-step-group" id="wrapper-time" style="display: none;">
-                        <label>اختر الموعد (مرفق من لوحة التحكم)</label>
+                        <label>اختر الموعد</label>
                         <select id="dropdown-time">
                             <option value="">-- اختر ساعة الدوام المتاحة --</option>
                             <option value="08:00 صباحاً">08:00 صباحاً</option>
@@ -835,7 +819,7 @@
             </div>
         </div>
 
-        <!-- الشريط السفلي للجوال (يظهر فقط في الرئيسية) -->
+        <!-- الشريط السفلي للجوال -->
         <div class="bottom-navigation show-nav" id="mob-bottom-nav">
             <button class="nav-item interactive-element active" id="mob-home" onclick="switchTab('home-screen')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></button>
             <button class="nav-item interactive-element" id="mob-appointments" onclick="switchTab('appointments-screen')"><i class="fa-regular fa-calendar-check"></i><span>المواعيد</span></button>
@@ -851,7 +835,19 @@
             { name: "ديمة", dob: "2021-10-05", ageText: "5 سنوات", gender: "أنثى", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)", notes: "", image: "" }
         ];
 
-        // قائمة الدكاترة والفرق العلاجية
+        // مصفوفة قائمة المواعيد المحجوزة (تدعم عدة مواعيد دون تداخل)
+        let appointmentsList = [
+            {
+                id: 1,
+                childName: "سعود",
+                service: "جلسة علاج طبيعي",
+                branch: "الفرع الرئيسي - العاصمة",
+                doctor: "أ. ساره خالد",
+                day: "الإثنين 12 أكتوبر 2026",
+                time: "10:00 صباحاً"
+            }
+        ];
+
         let doctorsList = [
             { name: "أ. عبد الله محمد", gender: "ذكر", specialty: "أخصائي علاج طبيعي وتأهيل حركي", desc: "خبرة 8 سنوات في علاج المشاكل الحركية والشلل الدماغي للأطفال.", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&auto=format&fit=crop&q=80" },
             { name: "أ. ساره خالد", gender: "أنثى", specialty: "أخصائية علاج وظيفي وتكامل حسي", desc: "متخصصة في المهارات الحركية الدقيقة والتكامل الحسي للأطفال.", img: "" },
@@ -886,9 +882,6 @@
 
             document.getElementById('home-child-name').innerText = child.name;
             document.getElementById('home-child-age').innerText = "العمر: " + child.ageText;
-            
-            const aptChildElem = document.getElementById('apt-child-name');
-            if (aptChildElem) aptChildElem.innerText = child.name;
 
             const homeAvatarContainer = document.getElementById('home-child-avatar');
             if (child.image) {
@@ -899,6 +892,50 @@
 
             document.getElementById('children-dropdown').classList.remove('show');
             renderChildrenListScreen();
+            updateNextAppointmentCard();
+        }
+
+        function updateNextAppointmentCard() {
+            const activeChildName = childrenList[currentChildIndex].name;
+            const childApts = appointmentsList.filter(a => a.childName === activeChildName);
+            
+            if (childApts.length > 0) {
+                const nextApt = childApts[0];
+                document.getElementById('display-app-service').innerText = nextApt.service;
+                document.getElementById('display-app-date').innerText = nextApt.day + " - " + nextApt.time;
+                document.getElementById('display-app-branch').innerText = "الفرع: " + nextApt.branch;
+                document.getElementById('display-app-doctor').innerText = "الطبيب: " + nextApt.doctor;
+            } else {
+                document.getElementById('display-app-service').innerText = "لا توجد مواعيد قادمة";
+                document.getElementById('display-app-date').innerText = "قم بحجز موعد جديد الآن";
+                document.getElementById('display-app-branch').innerText = "";
+                document.getElementById('display-app-doctor').innerText = "";
+            }
+        }
+
+        function renderAppointmentsListScreen() {
+            const container = document.getElementById('appointments-list-container');
+            container.innerHTML = "";
+
+            if (appointmentsList.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#64748b; padding:20px;'>لا توجد مواعيد حالياً.</p>";
+                return;
+            }
+
+            appointmentsList.forEach((apt, index) => {
+                container.innerHTML += `
+                    <div class="card-box" style="border-right: 5px solid #0284c7; margin-bottom: 12px;">
+                        <h4 style="color: #0284c7; margin-bottom: 4px; font-weight:800;">${apt.service}</h4>
+                        <p style="font-size: 13px; color: #475569;">الطفل: <span>${apt.childName}</span></p>
+                        <p style="font-size: 13px; color: #475569;">التاريخ والموعد: <span>${apt.day} - ${apt.time}</span></p>
+                        <p style="font-size: 13px; color: #475569;">الفرع: <span>${apt.branch}</span></p>
+                        <p style="font-size: 13px; color: #475569;">الطبيب: <span>${apt.doctor}</span></p>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            <button class="interactive-element" onclick="cancelAppointment(${apt.id})" style="background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">إلغاء الموعد</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         function renderChildrenListScreen() {
@@ -926,20 +963,11 @@
             const container = document.getElementById('doctors-list-container');
             container.innerHTML = "";
             doctorsList.forEach((doc) => {
-                let avatarHTML = "";
-                if (doc.gender === "أنثى") {
-                    // الطبيبات النساء دون صورة
-                    avatarHTML = `<i class="fa-solid fa-user-doctor" style="color: #0284c7;"></i>`;
-                } else {
-                    // الأطباء الرجال مع إمكانية عرض صورتهم
-                    avatarHTML = doc.img ? `<img src="${doc.img}" alt="${doc.name}" />` : `<i class="fa-solid fa-user-doctor"></i>`;
-                }
+                let avatarHTML = doc.gender === "أنثى" ? `<i class="fa-solid fa-user-doctor" style="color: #0284c7;"></i>` : (doc.img ? `<img src="${doc.img}" alt="${doc.name}" />` : `<i class="fa-solid fa-user-doctor"></i>`);
 
                 container.innerHTML += `
                     <div class="doctor-card">
-                        <div class="doctor-avatar-box">
-                            ${avatarHTML}
-                        </div>
+                        <div class="doctor-avatar-box">${avatarHTML}</div>
                         <div class="doctor-info" style="flex-grow:1;">
                             <h4>${doc.name}</h4>
                             <div class="doc-spec">${doc.specialty}</div>
@@ -1122,31 +1150,33 @@
             document.querySelectorAll('.app-content').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             
-            // التحكم بإظهار/إخفاء الشريط السفلي للجوال والرأس العلوي
             const bottomNav = document.getElementById('mob-bottom-nav');
             const appHeader = document.getElementById('main-app-header');
 
             if(screenId === 'home-screen') {
                 bottomNav.classList.add('show-nav');
                 appHeader.style.display = 'flex';
+                updateNextAppointmentCard();
             } else if (screenId === 'booking-screen') {
-                // إخفاء العلوية والسفلية فوراً في حجز جديد
                 bottomNav.classList.remove('show-nav');
                 appHeader.style.display = 'none';
             } else {
-                // باقي الشاشات الفرعية: إخفاء الشريط السفلي وإبقاء الهيدر علوي حسب الرغبة
                 bottomNav.classList.remove('show-nav');
                 appHeader.style.display = 'flex';
             }
 
-            // تحديث محتوى الشاشات عند الانتقال لها
             if(screenId === 'children-screen') renderChildrenListScreen();
             if(screenId === 'doctors-screen') renderDoctorsListScreen();
+            if(screenId === 'appointments-screen') renderAppointmentsListScreen();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function startBooking() { switchTab('booking-screen'); goToStep(1); }
+        function startBooking() { 
+            bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
+            switchTab('booking-screen'); 
+            goToStep(1); 
+        }
 
         function goToStep(stepNumber) {
             for(let i=1; i<=4; i++) document.getElementById('booking-step-' + i).style.display = 'none';
@@ -1213,30 +1243,41 @@
                 alert('الرجاء اختيار الطبيب، اليوم، ووقت الموعد كاملاً.');
                 return;
             }
+
+            const activeChildName = childrenList[currentChildIndex].name;
+
+            // التحقق الذكي: منع حجز نفس القسم مسبقاً لنفس الطفل
+            const sameServiceExist = appointmentsList.some(a => a.childName === activeChildName && a.service === bookingData.service);
+            if (sameServiceExist) {
+                alert('عذراً، يوجد موعد سابق مسجل لهذا الطفل في نفس القسم (' + bookingData.service + '). لا يمكن حجز نفس القسم مرتين.');
+                return;
+            }
+
+            // التحقق الذكي: منع تداخل المواعيد في نفس اليوم والوقت تماماً
+            const timeConflictExist = appointmentsList.some(a => a.childName === activeChildName && a.day === bookingData.day && a.time === bookingData.time);
+            if (timeConflictExist) {
+                alert('عذراً، يوجد تعارض في المواعيد! لدى الطفل موعد آخر مسبق في نفس اليوم والتوقيت (' + bookingData.day + ' - ' + bookingData.time + ').');
+                return;
+            }
+
             goToStep(4);
         }
 
         function finalizeBooking() {
             const activeChild = childrenList[currentChildIndex];
-            document.getElementById('display-app-service').innerText = bookingData.service;
-            document.getElementById('display-app-date').innerText = bookingData.day + " - " + bookingData.time;
-            document.getElementById('display-app-branch').innerText = "الفرع: " + bookingData.branch;
-            document.getElementById('display-app-doctor').innerText = "الطبيب: " + bookingData.doctor;
 
-            const listContainer = document.getElementById('appointments-list-container');
-            listContainer.innerHTML = `
-                <div class="card-box" style="border-right: 5px solid #0284c7;">
-                    <h4 id="apt-service-title" style="color: #0284c7; margin-bottom: 4px; font-weight:800;">${bookingData.service}</h4>
-                    <p style="font-size: 13px; color: #475569;">الطفل: <span id="apt-child-name">${activeChild.name}</span></p>
-                    <p style="font-size: 13px; color: #475569;">التاريخ والموعد: <span id="apt-date-text">${bookingData.day} - ${bookingData.time}</span></p>
-                    <p style="font-size: 13px; color: #475569;">الفرع: <span id="apt-branch-text">${bookingData.branch}</span></p>
-                    <p style="font-size: 13px; color: #475569;">الطبيب: <span id="apt-doctor-text">${bookingData.doctor}</span></p>
-                    <div style="margin-top: 12px; display: flex; gap: 8px;">
-                        <button class="interactive-element" onclick="startBooking()" style="background:#0284c7; color:white; border:none; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">تعديل الموعد</button>
-                        <button class="interactive-element" onclick="cancelAppointment()" style="background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">إلغاء الموعد</button>
-                    </div>
-                </div>
-            `;
+            // إنشاء موعد جديد وإضافته لقائمة المواعيد
+            const newAppointment = {
+                id: Date.now(),
+                childName: activeChild.name,
+                service: bookingData.service,
+                branch: bookingData.branch,
+                doctor: bookingData.doctor,
+                day: bookingData.day,
+                time: bookingData.time
+            };
+
+            appointmentsList.unshift(newAppointment); // إضافة الموعد الجديد في بداية القائمة
 
             alert('تم حجز الموعد بنجاح للطفل: ' + activeChild.name);
             switchTab('home-screen');
@@ -1248,19 +1289,18 @@
             alert('تم تحديث البيانات بنجاح!');
         }
 
-        function cancelAppointment() {
-            if(confirm('هل أنت متأكد من إلغاء الموعد؟')) {
-                document.getElementById('display-app-service').innerText = "لا توجد مواعيد قادمة";
-                document.getElementById('display-app-date').innerText = "قم بحجز موعد جديد الآن";
-                document.getElementById('display-app-branch').innerText = "";
-                document.getElementById('display-app-doctor').innerText = "";
-                document.getElementById('appointments-list-container').innerHTML = "<p style='text-align:center; color:#64748b; padding:20px;'>لا توجد مواعيد حالياً.</p>";
-                alert('تم إلغاء الموعد.');
+        function cancelAppointment(aptId) {
+            if(confirm('هل أنت متأكد من إلغاء هذا الموعد؟')) {
+                appointmentsList = appointmentsList.filter(a => a.id !== aptId);
+                renderAppointmentsListScreen();
+                updateNextAppointmentCard();
+                alert('تم إلغاء الموعد بنجاح.');
             }
         }
 
         updateDropdownMenuHTML();
         renderChildrenListScreen();
+        updateNextAppointmentCard();
     </script>
 </body>
 </html>
