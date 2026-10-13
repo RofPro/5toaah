@@ -122,6 +122,11 @@
             margin-top: 10px;
         }
 
+        /* إخفاء التطبيق بالكامل خلف شاشة الدخول ومنع التمرير */
+        .auth-container { bottom: 0; height: 100%; overflow-y: auto; }
+        body.auth-open { overflow: hidden; height: 100vh; }
+        body.auth-open .app-layout { display: none; }
+
         /* ---------------- الهيكل الرئيسي للتطبيق ---------------- */
         .app-layout {
             display: flex;
@@ -631,6 +636,121 @@
 
         .bottom-navigation { display: none; }
 
+        /* نظام الإشعارات العائمة (Toast Container) بدون تخريب التصميم */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 380px;
+            pointer-events: none;
+        }
+
+        .toast-message {
+            background: #ffffff;
+            color: #0f172a;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.15);
+            border-right: 5px solid var(--primary-teal);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .toast-message.toast-error { border-right-color: #e11d48; }
+        .toast-message.toast-success { border-right-color: #16a34a; }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* نافذة الدردشة المباشرة مع الطبيب */
+        .chat-container-box {
+            display: flex;
+            flex-direction: column;
+            height: 380px;
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1.5px solid #e2e8f0;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .chat-messages-list {
+            flex-grow: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: #f8fafc;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.doctor {
+            align-self: flex-start;
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-bubble.user {
+            align-self: flex-end;
+            background: #0284c7;
+            color: #ffffff;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 8px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            gap: 6px;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1.5px solid #cbd5e1;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 0 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .main-wrapper { margin-right: 0; padding-bottom: 20px; }
@@ -649,7 +769,10 @@
         }
     </style>
 </head>
-<body>
+<body class="auth-open">
+
+    <!-- حاوية التنبيهات العائمة -->
+    <div id="toast-container"></div>
 
     <!-- شاشة تسجيل الدخول -->
     <div class="auth-container" id="auth-screen">
@@ -717,6 +840,7 @@
                         <div class="child-meta">
                             <h3 id="home-child-name">سعود</h3>
                             <p id="home-child-age">العمر: 4 سنوات و 3 أشهر</p>
+                            <p id="home-child-fileno" style="font-size:11px; color:#0284c7; font-weight:700; margin:0 0 6px 0;"></p>
                             <div class="switch-child-container">
                                 <button class="switch-child-pill interactive-element" onclick="toggleChildrenMenu(event)">تبديل الطفل <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i></button>
                                 <div id="children-dropdown" class="children-dropdown-menu"></div>
@@ -793,7 +917,7 @@
                     <div style="width:100%; background:#e2e8f0; height:10px; border-radius:10px; overflow:hidden; margin-bottom:20px;">
                         <div style="width:75%; height:100%; background:var(--primary-teal); border-radius:10px;"></div>
                     </div>
-                    <button class="teal-btn-action interactive-element" onclick="alert('تفاصيل الخطة')">عرض التفاصيل الكاملة</button>
+                    <button class="teal-btn-action interactive-element" onclick="showToast('جارٍ تحميل الخطة العلاجية المفصلة...')">عرض التفاصيل الكاملة</button>
                 </div>
             </div>
 
@@ -854,7 +978,14 @@
                         <div class="report-icon-box" style="background:#ffe4e6; color:#e11d48;"><i class="fa-solid fa-file-lines"></i></div>
                         <div><h4 style="font-size:13px; font-weight:800;">تقرير التقييم الأولي</h4><p style="font-size:11px; color:#94a3b8;">15 يناير 2025</p></div>
                     </div>
-                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;"></i>
+                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;" onclick="downloadReport('تقرير التقييم الأولي')"></i>
+                </div>
+                <div class="report-card-item">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="report-icon-box" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-file-waveform"></i></div>
+                        <div><h4 style="font-size:13px; font-weight:800;">تقرير المتابعة النصف سنوي</h4><p style="font-size:11px; color:#94a3b8;">10 يونيو 2025</p></div>
+                    </div>
+                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;" onclick="downloadReport('تقرير المتابعة النصف سنوي')"></i>
                 </div>
             </div>
 
@@ -978,16 +1109,41 @@
                 </div>
             </div>
 
-            <!-- الفريق العلاجي -->
+            <!-- الفريق العلاجي والدردشة المباشرة -->
             <div id="doctors-screen" class="app-content">
                 <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> الفريق العلاجي</div>
                 <div class="doctor-card">
                     <div class="doctor-avatar-box"><i class="fa-solid fa-user-doctor"></i></div>
-                    <div class="doctor-info"><h4>أ. ساره خالد</h4><p style="font-size:12px; color:#64748b;">أخصائية علاج طبيعي</p></div>
+                    <div class="doctor-info" style="flex-grow:1;">
+                        <h4>أ. ساره خالد</h4>
+                        <p style="font-size:12px; color:#64748b;">أخصائية علاج طبيعي</p>
+                    </div>
+                    <button class="interactive-element" onclick="openDoctorChat('أ. ساره خالد')" style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:6px 12px; border-radius:10px; font-size:11px; font-weight:800; cursor:pointer;"><i class="fa-solid fa-comments"></i> مراسلة</button>
                 </div>
                 <div class="doctor-card">
                     <div class="doctor-avatar-box"><i class="fa-solid fa-user-doctor"></i></div>
-                    <div class="doctor-info"><h4>د. نورة أحمد</h4><p style="font-size:12px; color:#64748b;">أخصائية علاج وظيفي ونطق</p></div>
+                    <div class="doctor-info" style="flex-grow:1;">
+                        <h4>د. نورة أحمد</h4>
+                        <p style="font-size:12px; color:#64748b;">أخصائية علاج وظيفي ونطق</p>
+                    </div>
+                    <button class="interactive-element" onclick="openDoctorChat('د. نورة أحمد')" style="background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:6px 12px; border-radius:10px; font-size:11px; font-weight:800; cursor:pointer;"><i class="fa-solid fa-comments"></i> مراسلة</button>
+                </div>
+
+                <!-- نافذة الدردشة المباشرة -->
+                <div id="chat-box-wrapper" style="display:none; margin-top:15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#e0f2fe; padding:10px 14px; border-radius:12px; border:1px solid #bae6fd;">
+                        <span style="font-size:13px; font-weight:800; color:#0284c7;" id="chat-doctor-title">الدردشة مع الأخصائي</span>
+                        <i class="fa-solid fa-xmark" style="cursor:pointer; color:#64748b;" onclick="closeDoctorChat()"></i>
+                    </div>
+                    <div class="chat-container-box">
+                        <div class="chat-messages-list" id="chat-messages-container">
+                            <div class="chat-bubble doctor">أهلاً بك! كيف يمكنني مساعدتك اليوم بخصوص الطفل؟</div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chat-user-input" placeholder="اكتب استفسارك هنا..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                            <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1020,12 +1176,58 @@
         let currentChildIndex = 0;
         let bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
 
+        const DAYS_AR = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+        const MONTHS_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+        function pad2(n) { return String(n).padStart(2, '0'); }
+        function isoOffset(n) {
+            const d = new Date(); d.setDate(d.getDate() + n);
+            return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+        }
+        function dayLabel(iso) {
+            const [y, m, d] = iso.split('-').map(Number);
+            return DAYS_AR[new Date(y, m - 1, d).getDay()] + ' ' + d + ' ' + MONTHS_AR[m - 1] + ' ' + y;
+        }
+        function normDigits(s) {
+            return String(s).replace(/[٠-٩]/g, c => c.charCodeAt(0) - 1632).replace(/[۰-۹]/g, c => c.charCodeAt(0) - 1776);
+        }
+        function aptKey(a) {
+            const t = ((a.time || '').match(/\d{1,2}:\d{2}/) || ['00:00'])[0].padStart(5, '0');
+            return (a.iso || '9999-99-99') + ' ' + t;
+        }
+        function isUpcoming(a) { return (a.iso || '') >= isoOffset(0); }
+        function upcomingSorted(list) {
+            return list.filter(isUpcoming).sort((x, y) => aptKey(x) < aptKey(y) ? -1 : 1);
+        }
+        function migrateAppointments() {
+            appointmentsList.forEach(a => {
+                if (a.iso) return;
+                const m = (a.day || '').match(/(\d+)\s+(\S+)\s+(\d{4})/);
+                const mi = m ? MONTHS_AR.indexOf(m[2]) : -1;
+                a.iso = (m && mi >= 0) ? m[3] + '-' + pad2(mi + 1) + '-' + pad2(m[1]) : '0000-00-00';
+            });
+        }
+
+        // نظام التنبيهات العائمة Toast بدلاً من الـ Alert
+        function showToast(msg, type = 'normal') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-message' + (type === 'error' ? ' toast-error' : type === 'success' ? ' toast-success' : '');
+            toast.innerHTML = (type === 'error' ? '<i class="fa-solid fa-circle-exclamation" style="color:#e11d48;"></i>' : '<i class="fa-solid fa-circle-check" style="color:#16a34a;"></i>') + ' <span>' + esc(msg) + '</span>';
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
         let childrenList = [
             { name: "سعود", dob: "2022-01-15", ageText: "4 سنوات و 3 أشهر", gender: "ذكر", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)" },
             { name: "ماهر", dob: "2023-04-10", ageText: "3 سنوات و 6 أشهر", gender: "ذكر", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)" }
         ];
         let appointmentsList = [
-            { id: 1, childName: "سعود", service: "جلسة علاج طبيعي", branch: "الفرع الرئيسي - العاصمة", doctor: "أ. ساره خالد", day: "الإثنين 12 أكتوبر 2026", time: "10:00 صباحاً" }
+            { id: 1, childName: "سعود", service: "جلسة علاج طبيعي", branch: "الفرع الرئيسي - العاصمة", doctor: "أ. ساره خالد", iso: isoOffset(1), day: dayLabel(isoOffset(1)), time: "10:00 صباحاً" }
         ];
 
         // الحفظ والتحميل
@@ -1041,6 +1243,22 @@
         function getSession() {
             try { return JSON.parse(localStorage.getItem(SESSION) || 'null'); } catch (e) { return null; }
         }
+        const COUNTER_KEY = 'khatwa_file_counter';
+
+        function nextFileNo() {
+            let n = 0;
+            try { n = parseInt(localStorage.getItem(COUNTER_KEY) || '0', 10) || 0; } catch (e) {}
+            const used = childrenList.map(c => parseInt((c.fileNo || '').replace(/\D/g, ''), 10) || 0);
+            n = Math.max(n, ...used) + 1;
+            try { localStorage.setItem(COUNTER_KEY, n); } catch (e) {}
+            return 'KH-' + String(n).padStart(4, '0');
+        }
+
+        function ensureFileNumbers() {
+            childrenList.forEach(c => { if (!c.fileNo) c.fileNo = nextFileNo(); });
+            save();
+        }
+
         function esc(s) {
             return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
@@ -1049,9 +1267,11 @@
         function showAuth(show) {
             const a = document.getElementById('auth-screen');
             if (show) {
+                document.body.classList.add('auth-open');
                 a.style.display = 'flex';
                 requestAnimationFrame(() => { a.style.opacity = '1'; });
             } else {
+                document.body.classList.remove('auth-open');
                 a.style.transition = 'opacity 200ms';
                 a.style.opacity = '0';
                 setTimeout(() => { a.style.display = 'none'; }, 200);
@@ -1065,10 +1285,10 @@
         }
 
         function sendOTP() {
-            const phone = document.getElementById('login-phone').value.trim();
+            const phone = normDigits(document.getElementById('login-phone').value.trim());
             const name = document.getElementById('login-mom-name').value.trim();
-            if (!phone || !name) { alert('الرجاء إدخال الاسم ورقم الجوال.'); return; }
-            if (!/^05\d{8}$/.test(phone)) { alert('رقم الجوال غير صحيح، يجب أن يبدأ بـ 05 ويتكون من 10 أرقام.'); return; }
+            if (!phone || !name) { showToast('الرجاء إدخال الاسم ورقم الجوال.', 'error'); return; }
+            if (!/^05\d{8}$/.test(phone)) { showToast('رقم الجوال غير صحيح، يجب أن يبدأ بـ 05 ويتكون من 10 أرقام.', 'error'); return; }
 
             generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
             document.querySelector('#auth-step-otp > div').innerText =
@@ -1076,6 +1296,7 @@
             document.getElementById('login-otp-code').value = "";
             document.getElementById('auth-step-phone').style.display = 'none';
             document.getElementById('auth-step-otp').style.display = 'block';
+            showToast('تم إرسال رمز التحقق بنجاح', 'success');
         }
 
         function backToPhoneStep() {
@@ -1084,16 +1305,17 @@
         }
 
         function verifyAndLogin() {
-            const otp = document.getElementById('login-otp-code').value.trim();
+            const otp = normDigits(document.getElementById('login-otp-code').value.trim());
             if (generatedOTP && otp === generatedOTP) {
                 const name = document.getElementById('login-mom-name').value.trim();
-                const phone = document.getElementById('login-phone').value.trim();
+                const phone = normDigits(document.getElementById('login-phone').value.trim());
                 try { localStorage.setItem(SESSION, JSON.stringify({ name, phone })); } catch (e) {}
                 applyMomData(name, phone);
                 generatedOTP = "";
                 showAuth(false);
+                showToast('تم تسجيل الدخول بنجاح', 'success');
             } else {
-                alert('رمز التحقق غير صحيح، حاول مرة أخرى.');
+                showToast('رمز التحقق غير صحيح، حاول مرة أخرى.', 'error');
             }
         }
 
@@ -1104,6 +1326,7 @@
                 backToPhoneStep();
                 switchTab('home-screen');
                 showAuth(true);
+                showToast('تم تسجيل الخروج بنجاح');
             }
         }
 
@@ -1133,20 +1356,23 @@
         }
 
         // الأطفال
-        function calcAge(dob) {
+        function ageMonths(dob) {
             const d = new Date(dob), n = new Date();
             let m = (n.getFullYear() - d.getFullYear()) * 12 + n.getMonth() - d.getMonth();
             if (n.getDate() < d.getDate()) m--;
-            if (m < 0) m = 0;
-            const y = Math.floor(m / 12), mm = m % 12;
+            return Math.max(m, 0);
+        }
+
+        function calcAge(dob) {
+            const m = ageMonths(dob), y = Math.floor(m / 12), mm = m % 12;
             const parts = [];
-            if (y > 0) parts.push(y + (y === 1 ? " سنة" : y === 2 ? " سنتان" : " سنوات"));
-            if (mm > 0 || y === 0) parts.push(mm + " أشهر");
+            if (y > 0) parts.push(y === 1 ? "سنة" : y === 2 ? "سنتان" : y + (y <= 10 ? " سنوات" : " سنة"));
+            if (mm > 0 || y === 0) parts.push(mm === 1 ? "شهر" : mm === 2 ? "شهران" : mm + (mm <= 10 ? " أشهر" : " شهراً"));
             return parts.join(" و ");
         }
 
         function stageFor(dob) {
-            const years = new Date().getFullYear() - new Date(dob).getFullYear();
+            const years = Math.floor(ageMonths(dob) / 12);
             if (years < 3) return "مرحلة الرضاعة والمشي المبكر (أقل من 3 سنوات)";
             if (years <= 6) return "مرحلة الطفولة المبكرة (3 - 6 سنوات)";
             return "مرحلة الطفولة (7 سنوات فأكثر)";
@@ -1156,11 +1382,12 @@
             currentChildIndex = index;
             const child = childrenList[index];
             document.getElementById('home-child-name').innerText = child.name;
-            document.getElementById('home-child-age').innerText = "العمر: " + child.ageText;
+            document.getElementById('home-child-age').innerText = "العمر: " + calcAge(child.dob);
             document.getElementById('plan-child-name').innerText = child.name;
-            document.getElementById('plan-child-age').innerText = child.ageText;
+            document.getElementById('plan-child-age').innerText = calcAge(child.dob);
             document.getElementById('prog-child-name').innerText = child.name;
-            document.getElementById('prog-child-age').innerText = child.ageText;
+            document.getElementById('prog-child-age').innerText = calcAge(child.dob);
+            document.getElementById('home-child-fileno').innerText = "رقم الملف: " + child.fileNo;
             updateNextAppointmentCard();
         }
 
@@ -1175,6 +1402,7 @@
         function pickChild(i) {
             selectChild(i);
             document.getElementById('children-dropdown').classList.remove('show');
+            showToast('تم اختيار الطفل ' + childrenList[i].name, 'success');
         }
 
         document.addEventListener('click', () => {
@@ -1188,8 +1416,9 @@
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <div>
                             <h4 style="font-size:15px; font-weight:800; color:#0f172a;">${esc(c.name)}</h4>
-                            <p style="font-size:12px; color:#64748b;">${esc(c.gender)} - ${esc(c.ageText)}</p>
-                            <p style="font-size:11px; color:#0284c7; font-weight:700;">${esc(c.stage)}</p>
+                            <p style="font-size:12px; color:#64748b;">${esc(c.gender)} - ${esc(calcAge(c.dob))}</p>
+                            <p style="font-size:11px; color:#0284c7; font-weight:700;">${esc(stageFor(c.dob))}</p>
+                            <p style="font-size:11px; color:#64748b; font-weight:700;">رقم الملف: ${esc(c.fileNo)}</p>
                         </div>
                         ${i === currentChildIndex ? '<span style="font-size:11px; font-weight:800; color:#16a34a;">الطفل الحالي</span>' : ''}
                     </div>
@@ -1210,20 +1439,21 @@
             const name = document.getElementById('new-child-name').value.trim();
             const dob = document.getElementById('new-child-dob').value;
             const gender = document.getElementById('new-child-gender').value;
-            if (!name || !dob) { alert('الرجاء إدخال اسم الطفل وتاريخ ميلاده.'); return; }
-            if (new Date(dob) > new Date()) { alert('تاريخ الميلاد غير صحيح.'); return; }
-            if (childrenList.some(c => c.name === name)) { alert('يوجد طفل مسجل بنفس الاسم.'); return; }
+            if (!name || !dob) { showToast('الرجاء إدخال اسم الطفل وتاريخ ميلاده.', 'error'); return; }
+            if (new Date(dob) > new Date()) { showToast('تاريخ الميلاد غير صحيح.', 'error'); return; }
+            if (childrenList.some(c => c.name === name)) { showToast('يوجد طفل مسجل بنفس الاسم.', 'error'); return; }
 
-            childrenList.push({ name, dob, ageText: calcAge(dob), gender, stage: stageFor(dob) });
+            childrenList.push({ name, dob, ageText: calcAge(dob), gender, stage: stageFor(dob), fileNo: nextFileNo() });
             save();
             document.getElementById('new-child-name').value = "";
             document.getElementById('new-child-dob').value = "";
             document.getElementById('add-child-form').style.display = 'none';
             renderChildren();
+            showToast('تمت إضافة الطفل بنجاح!', 'success');
         }
 
         function deleteChild(i) {
-            if (childrenList.length === 1) { alert('لا يمكن حذف الطفل الوحيد المسجل.'); return; }
+            if (childrenList.length === 1) { showToast('لا يمكن حذف الطفل الوحيد المسجل.', 'error'); return; }
             const name = childrenList[i].name;
             if (!confirm('سيتم حذف ' + name + ' وجميع مواعيده. هل أنت متأكد؟')) return;
             childrenList.splice(i, 1);
@@ -1231,12 +1461,13 @@
             save();
             selectChild(0);
             renderChildren();
+            showToast('تم حذف ملف الطفل', 'success');
         }
 
         // المواعيد
         function updateNextAppointmentCard() {
             const activeChildName = childrenList[currentChildIndex].name;
-            const childApts = appointmentsList.filter(a => a.childName === activeChildName);
+            const childApts = upcomingSorted(appointmentsList.filter(a => a.childName === activeChildName));
             if (childApts.length > 0) {
                 const nextApt = childApts[0];
                 document.getElementById('display-app-service').innerText = nextApt.service;
@@ -1253,11 +1484,12 @@
 
         function renderAppointments() {
             const box = document.getElementById('appointments-list-container');
-            if (!appointmentsList.length) {
+            const list = upcomingSorted(appointmentsList);
+            if (!list.length) {
                 box.innerHTML = '<div class="card-box" style="text-align:center; color:#64748b; font-size:13px;">لا توجد مواعيد محجوزة حالياً</div>';
                 return;
             }
-            box.innerHTML = appointmentsList.map(a => `
+            box.innerHTML = list.map(a => `
                 <div class="card-box">
                     <h4 style="font-size:15px; font-weight:800; color:#0284c7; margin-bottom:4px;">${esc(a.service)}</h4>
                     <p style="font-size:12px; color:#0f172a; font-weight:700;">الطفل: ${esc(a.childName)}</p>
@@ -1274,11 +1506,14 @@
             save();
             renderAppointments();
             updateNextAppointmentCard();
+            showToast('تم إلغاء الموعد بنجاح', 'success');
         }
 
         // الحجز
         function startBooking() {
             bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
+            document.getElementById('dropdown-day').innerHTML = '<option value="">-- اختر اليوم --</option>' +
+                [1, 2, 3, 4, 5, 6, 7].map(n => { const iso = isoOffset(n); return '<option value="' + iso + '">' + dayLabel(iso) + '</option>'; }).join('');
             ['dropdown-doctor', 'dropdown-day', 'dropdown-time'].forEach(id => document.getElementById(id).value = "");
             document.getElementById('wrapper-day').style.display = 'none';
             document.getElementById('wrapper-time').style.display = 'none';
@@ -1320,21 +1555,23 @@
 
         function proceedToConfirmation() {
             bookingData.doctor = document.getElementById('dropdown-doctor').value;
-            bookingData.day = document.getElementById('dropdown-day').value;
+            const daySel = document.getElementById('dropdown-day');
+            bookingData.iso = daySel.value;
+            bookingData.day = daySel.value ? daySel.options[daySel.selectedIndex].text : "";
             bookingData.time = document.getElementById('dropdown-time').value;
             if (!bookingData.doctor || !bookingData.day || !bookingData.time) {
-                alert('الرجاء اختيار الطبيب واليوم والموعد قبل المتابعة.'); return;
+                showToast('الرجاء اختيار الطبيب واليوم والموعد قبل المتابعة.', 'error'); return;
             }
 
             const activeChildName = childrenList[currentChildIndex].name;
-            if (appointmentsList.some(a => a.childName === activeChildName && a.service === bookingData.service)) {
-                alert('عذراً، يوجد موعد سابق للطفل في نفس القسم (' + bookingData.service + ').'); return;
+            if (appointmentsList.filter(isUpcoming).some(a => a.childName === activeChildName && a.service === bookingData.service)) {
+                showToast('عذراً، يوجد موعد سابق للطفل في نفس القسم (' + bookingData.service + ').', 'error'); return;
             }
-            if (appointmentsList.some(a => a.childName === activeChildName && a.day === bookingData.day && a.time === bookingData.time)) {
-                alert('عذراً، يوجد تعارض في الوقت!'); return;
+            if (appointmentsList.some(a => a.childName === activeChildName && a.iso === bookingData.iso && a.time === bookingData.time)) {
+                showToast('عذراً، يوجد تعارض في الوقت!', 'error'); return;
             }
-            if (appointmentsList.some(a => a.doctor === bookingData.doctor && a.day === bookingData.day && a.time === bookingData.time)) {
-                alert('هذا الموعد محجوز لدى الطبيب، الرجاء اختيار وقت آخر.'); return;
+            if (appointmentsList.some(a => a.doctor === bookingData.doctor && a.iso === bookingData.iso && a.time === bookingData.time)) {
+                showToast('هذا الموعد محجوز لدى الطبيب، الرجاء اختيار وقت آخر.', 'error'); return;
             }
 
             document.getElementById('conf-service').innerText = bookingData.service;
@@ -1351,33 +1588,82 @@
                 service: bookingData.service,
                 branch: bookingData.branch,
                 doctor: bookingData.doctor,
+                iso: bookingData.iso,
                 day: bookingData.day,
                 time: bookingData.time
             });
             save();
             updateNextAppointmentCard();
-            alert('تم حجز الموعد بنجاح!');
+            showToast('تم حجز الموعد بنجاح!', 'success');
             switchTab('home-screen');
+        }
+
+        // مراسلة الطبيب
+        function openDoctorChat(doctorName) {
+            document.getElementById('chat-doctor-title').innerText = "الدردشة المباشرة مع " + doctorName;
+            document.getElementById('chat-box-wrapper').style.display = 'block';
+            document.getElementById('chat-box-wrapper').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeDoctorChat() {
+            document.getElementById('chat-box-wrapper').style.display = 'none';
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chat-user-input');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            const chatList = document.getElementById('chat-messages-container');
+            
+            // رسالة المستخدم
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-bubble user';
+            userMsg.innerText = txt;
+            chatList.appendChild(userMsg);
+
+            input.value = "";
+            chatList.scrollTop = chatList.scrollHeight;
+
+            // رد وهمي مباشر من الطبيب للتفاعل
+            setTimeout(() => {
+                const docMsg = document.createElement('div');
+                docMsg.className = 'chat-bubble doctor';
+                docMsg.innerText = "شكراً لتواصلك. تم استلام استفسارك وسأقوم بالرد عليك في أقرب وقت.";
+                chatList.appendChild(docMsg);
+                chatList.scrollTop = chatList.scrollHeight;
+            }, 1000);
+        }
+
+        // تحميل وطباعة التقارير
+        function downloadReport(reportName) {
+            showToast('جارٍ إعداد ' + reportName + ' للطباعة والتنزيل...', 'success');
+            setTimeout(() => {
+                window.print();
+            }, 800);
         }
 
         // حساب الأم
         function updateMomData() {
             const name = document.getElementById('mom-name-input').value.trim();
-            const phone = document.getElementById('mom-phone-input').value.trim();
-            if (!name) { alert('الرجاء إدخال الاسم.'); return; }
-            if (!/^05\d{8}$/.test(phone)) { alert('رقم الجوال غير صحيح.'); return; }
+            const phone = normDigits(document.getElementById('mom-phone-input').value.trim());
+            if (!name) { showToast('الرجاء إدخال الاسم.', 'error'); return; }
+            if (!/^05\d{8}$/.test(phone)) { showToast('رقم الجوال غير صحيح.', 'error'); return; }
             document.getElementById('header-mom-name').innerText = name;
             try { localStorage.setItem(SESSION, JSON.stringify({ name, phone })); } catch (e) {}
-            alert('تم تحديث البيانات!');
+            showToast('تم تحديث البيانات بنجاح!', 'success');
         }
 
         // التشغيل
         load();
+        migrateAppointments();
+        ensureFileNumbers();
         selectChild(0);
         const savedSession = getSession();
         if (savedSession) {
             applyMomData(savedSession.name, savedSession.phone);
             document.getElementById('auth-screen').style.display = 'none';
+            document.body.classList.remove('auth-open');
         }
     </script>
 </body>
