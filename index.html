@@ -1,1446 +1,1384 @@
-‏<!DOCTYPE html>
-‏<html lang="ar" dir="rtl">
-‏<head>
-‏    <meta charset="UTF-8">
-‏    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-‏    <title>مركز خطوة - تطبيق حجز المواعيد والتأهيل</title>
-‏    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-‏    <style>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز خطوة - تطبيق حجز المواعيد والتأهيل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
         * {
-‏            box-sizing: border-box;
-‏            margin: 0;
-‏            padding: 0;
-‏            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-‏            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-‏        :root {
-‏            --primary-teal: #219Ebc;
-‏            --primary-teal-dark: #126782;
-‏            --primary-teal-light: #e8f7f9;
-‏            --bg-color: #f4f8fa;
-‏            --card-bg: #ffffff;
-‏            --text-dark: #0f172a;
-‏            --text-gray: #64748b;
+        :root {
+            --primary-teal: #219Ebc;
+            --primary-teal-dark: #126782;
+            --primary-teal-light: #e8f7f9;
+            --bg-color: #f4f8fa;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
         }
 
-‏        body {
-‏            background-color: var(--bg-color);
-‏            color: var(--text-dark);
-‏            direction: rtl;
-‏            min-height: 100vh;
-‏            display: flex;
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
         }
 
-‏        .app-layout {
-‏            display: flex;
-‏            width: 100%;
-‏            min-height: 100vh;
+        /* ---------------- شاشة الدخول والتسجيل ---------------- */
+        .auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        /* القائمة الجانبية للشاشات الكبيرة */
-‏        .sidebar {
-‏            width: 260px;
-‏            background-color: #ffffff;
-‏            border-left: 2px solid #e2e8f0;
-‏            display: flex;
-‏            flex-direction: column;
-‏            justify-content: space-between;
-‏            padding: 15px 20px;
-‏            position: fixed;
-‏            height: 100vh;
-‏            top: 0;
-‏            right: 0;
-‏            z-index: 100;
+        .auth-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px 24px;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.08);
+            border: 2px solid #bae6fd;
+            text-align: center;
         }
 
-‏        .sidebar-brand {
-‏            font-size: 19px;
-‏            font-weight: 800;
-‏            color: #0284c7;
-‏            display: flex;
-‏            align-items: center;
-‏            gap: 10px;
-‏            margin-bottom: 20px;
+        .auth-logo {
+            font-size: 32px;
+            color: var(--primary-teal);
+            margin-bottom: 10px;
         }
 
-‏        .sidebar-menu {
-‏            display: flex;
-‏            flex-direction: column;
-‏            gap: 6px;
-‏            flex-grow: 1;
+        .auth-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
 
-‏        .nav-item {
-‏            display: flex;
-‏            align-items: center;
-‏            gap: 12px;
-‏            padding: 9px 12px;
-‏            border-radius: 12px;
-‏            color: #64748b;
-‏            font-size: 14px;
-‏            font-weight: 600;
-‏            cursor: pointer;
-‏            background: none;
-‏            border: 2px solid transparent;
-‏            width: 100%;
-‏            text-align: right;
-‏            transition: all 0.2s;
+        .auth-subtitle {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
         }
 
-‏        .nav-item:hover, .nav-item.active {
-‏            background-color: #e0f2fe;
-‏            color: #0284c7;
-‏            border-color: #bae6fd;
+        .input-group-auth {
+            text-align: right;
+            margin-bottom: 16px;
         }
 
-‏        .interactive-element:active {
-‏            transform: scale(0.96) !important;
+        .input-group-auth label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
 
-        /* المحتوى الرئيسي */
-‏        .main-wrapper {
-‏            margin-right: 260px;
-‏            flex-grow: 1;
-‏            display: flex;
-‏            flex-direction: column;
-‏            min-height: 100vh;
-‏            background-color: var(--bg-color);
+        .input-group-auth input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+            background-color: #f8fafc;
         }
 
-‏        .app-header {
-‏            padding: 10px 25px;
-‏            display: flex;
-‏            justify-content: space-between;
-‏            align-items: center;
-‏            background-color: transparent;
+        .input-group-auth input:focus {
+            border-color: var(--primary-teal);
+            background-color: #ffffff;
         }
 
-‏        .header-profile-text {
-‏            font-size: 13px;
-‏            font-weight: 700;
-‏            color: #475569;
-‏            display: flex;
-‏            align-items: center;
-‏            gap: 6px;
+        .auth-btn {
+            width: 100%;
+            background-color: var(--primary-teal);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(33, 158, 188, 0.3);
+            margin-top: 10px;
         }
 
-‏        .header-profile-text span {
-‏            color: #0284c7;
-‏            font-weight: 800;
+        /* ---------------- الهيكل الرئيسي للتطبيق ---------------- */
+        .app-layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
         }
 
-‏        .notification-bell-btn {
-‏            position: relative;
-‏            font-size: 18px;
-‏            cursor: pointer;
-‏            color: #64748b;
+        .sidebar {
+            width: 260px;
+            background-color: #ffffff;
+            border-left: 2px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px 20px;
+            position: fixed;
+            height: 100vh;
+            top: 0;
+            right: 0;
+            z-index: 100;
         }
 
-‏        .notification-badge {
-‏            position: absolute;
-‏            top: -4px;
-‏            right: -4px;
-‏            background-color: #ef4444;
-‏            color: white;
-‏            font-size: 9px;
-‏            font-weight: 800;
-‏            width: 15px;
-‏            height: 15px;
-‏            border-radius: 50%;
-‏            display: flex;
-‏            align-items: center;
-‏            justify-content: center;
+        .sidebar-brand {
+            font-size: 19px;
+            font-weight: 800;
+            color: #0284c7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-‏        .app-content {
-‏            padding: 5px 25px 20px 25px;
-‏            flex-grow: 1;
-‏            display: none;
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
         }
 
-‏        .app-content.active {
-‏            display: block;
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: none;
+            border: 2px solid transparent;
+            width: 100%;
+            text-align: right;
+            transition: all 0.2s;
         }
 
-‏        .dashboard-grid-top {
-‏            display: grid;
-‏            grid-template-columns: 1fr 1.7fr;
-‏            gap: 15px;
-‏            margin-bottom: 16px;
+        .nav-item:hover, .nav-item.active {
+            background-color: #e0f2fe;
+            color: #0284c7;
+            border-color: #bae6fd;
         }
 
-        /* بطاقة الطفل بالرئيسية */
-‏        .child-profile-card {
-‏            background: linear-gradient(135deg, #ffffff 0%, #e6fffa 50%, #e0f2fe 100%);
-‏            border-radius: 16px;
-‏            padding: 14px 16px;
-‏            display: flex;
-‏            align-items: center;
-‏            justify-content: space-between;
-‏            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.04);
-‏            border: 2px solid #b2f5ea;
-‏            height: 100%;
+        .interactive-element:active {
+            transform: scale(0.96) !important;
         }
 
-‏        .child-meta { text-align: right; }
-‏        .child-meta h3 { font-size: 18px; font-weight: 800; color: #0f172a; }
-‏        .child-meta p { font-size: 11px; color: #64748b; margin: 2px 0 6px 0; }
-
-‏        .switch-child-container {
-‏            position: relative;
-‏            display: inline-block;
+        .main-wrapper {
+            margin-right: 260px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--bg-color);
         }
 
-‏        .switch-child-pill {
-‏            background-color: #ffffff;
-‏            color: #0284c7;
-‏            border: 1.5px solid #7dd3fc;
-‏            padding: 4px 10px;
-‏            border-radius: 8px;
-‏            font-size: 11px;
-‏            font-weight: 700;
-‏            cursor: pointer;
-‏            display: flex;
-‏            align-items: center;
-‏            gap: 5px;
-‏            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        .app-header {
+            padding: 10px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: transparent;
         }
 
-‏        .children-dropdown-menu {
-‏            display: none;
-‏            position: absolute;
-‏            right: 0;
-‏            top: 115%;
-‏            background: #ffffff;
-‏            border: 2px solid #bae6fd;
-‏            border-radius: 12px;
-‏            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-‏            z-index: 50;
-‏            min-width: 130px;
-‏            overflow: hidden;
+        .header-profile-text {
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-‏        .children-dropdown-menu.show { display: block; }
-
-‏        .child-dropdown-item {
-‏            padding: 8px 12px;
-‏            font-size: 12px;
-‏            font-weight: 700;
-‏            color: #1e293b;
-‏            cursor: pointer;
-‏            border-bottom: 1px solid #f1f5f9;
+        .header-profile-text span {
+            color: #0284c7;
+            font-weight: 800;
         }
 
-‏        .child-dropdown-item:hover {
-‏            background-color: #f0f9ff;
-‏            color: #0284c7;
+        .notification-bell-btn {
+            position: relative;
+            font-size: 18px;
+            cursor: pointer;
+            color: #64748b;
         }
 
-‏        .child-avatar-placeholder {
-‏            width: 72px;
-‏            height: 72px;
-‏            background-color: #ffffff;
-‏            border-radius: 50%;
-‏            display: flex;
-‏            justify-content: center;
-‏            align-items: center;
-‏            color: #0d9488;
-‏            font-size: 28px;
-‏            border: 3px solid #99f6e4;
-‏            box-shadow: 0 3px 10px rgba(13, 148, 136, 0.1);
-‏            overflow: hidden;
-        }
-‏        .child-avatar-placeholder img {
-‏            width: 100%;
-‏            height: 100%;
-‏            object-fit: cover;
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* بطاقة الموعد القادم */
-‏        .next-appointment-card {
-‏            background: linear-gradient(135deg, #0284c7, #0369a1);
-‏            color: #ffffff;
-‏            border-radius: 16px;
-‏            padding: 14px 16px;
-‏            border: 2px solid #38bdf8;
-‏            box-shadow: 0 5px 15px rgba(2, 132, 199, 0.15);
-‏            height: 100%;
-‏            display: flex;
-‏            flex-direction: column;
-‏            justify-content: space-between;
+        .app-content {
+            padding: 5px 25px 20px 25px;
+            flex-grow: 1;
+            display: none;
         }
 
-‏        .appointment-top-row {
-‏            display: flex;
-‏            justify-content: space-between;
-‏            align-items: flex-start;
-‏            margin-bottom: 4px;
+        .app-content.active {
+            display: block;
         }
 
-‏        .appointment-details h4 { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
-‏        .appointment-details p { font-size: 11px; opacity: 0.95; margin-bottom: 1px; }
-
-‏        .details-btn-top {
-‏            background-color: #ffffff;
-‏            color: #0284c7;
-‏            border: none;
-‏            padding: 5px 12px;
-‏            border-radius: 8px;
-‏            font-size: 11px;
-‏            font-weight: 800;
-‏            cursor: pointer;
-‏            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-‏            flex-shrink: 0;
+        .dashboard-grid-top {
+            display: grid;
+            grid-template-columns: 1fr 1.7fr;
+            gap: 15px;
+            margin-bottom: 16px;
         }
 
-        /* الخدمات الرئيسية */
-‏        .section-title-wrapper {
-‏            background: #e0f2fe;
-‏            color: #0284c7;
-‏            border: 1.5px solid #bae6fd;
-‏            padding: 6px 14px;
-‏            border-radius: 10px;
-‏            display: inline-flex;
-‏            align-items: center;
-‏            gap: 8px;
-‏            font-size: 13px;
-‏            font-weight: 800;
-‏            margin-bottom: 12px;
+        .child-profile-card {
+            background: linear-gradient(135deg, #ffffff 0%, #e6fffa 50%, #e0f2fe 100%);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.04);
+            border: 2px solid #b2f5ea;
+            height: 100%;
         }
 
-‏        .services-grid-box {
-‏            display: grid;
-‏            grid-template-columns: repeat(3, 1fr);
-‏            gap: 12px;
+        .child-meta { text-align: right; }
+        .child-meta h3 { font-size: 18px; font-weight: 800; color: #0f172a; }
+        .child-meta p { font-size: 11px; color: #64748b; margin: 2px 0 6px 0; }
+
+        .switch-child-container {
+            position: relative;
+            display: inline-block;
         }
 
-‏        .service-card-item {
-‏            border-radius: 14px;
-‏            padding: 14px 8px;
-‏            display: flex;
-‏            flex-direction: column;
-‏            align-items: center;
-‏            text-align: center;
-‏            cursor: pointer;
-‏            transition: all 0.2s;
+        .switch-child-pill {
+            background-color: #ffffff;
+            color: #0284c7;
+            border: 1.5px solid #7dd3fc;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
 
-‏        .service-card-item:hover { transform: translateY(-3px); }
-
-‏        .service-icon-box {
-‏            width: 44px;
-‏            height: 44px;
-‏            border-radius: 12px;
-‏            display: flex;
-‏            justify-content: center;
-‏            align-items: center;
-‏            font-size: 18px;
-‏            margin-bottom: 8px;
+        .children-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 115%;
+            background: #ffffff;
+            border: 2px solid #bae6fd;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            z-index: 50;
+            min-width: 130px;
+            overflow: hidden;
         }
 
-‏        .service-card-item span { font-size: 12px; font-weight: 800; }
+        .children-dropdown-menu.show { display: block; }
 
-‏        .card-red-gradient { background-color: #fff5f5; border: 2px solid #fecdd3; color: #be123c; }
-‏        .card-red-gradient .service-icon-box { background-color: #ffe4e6; color: #e11d48; border: 1px solid #fca5a5; }
-
-‏        .card-blue-gradient { background-color: #f0f9ff; border: 2px solid #bae6fd; color: #0369a1; }
-‏        .card-blue-gradient .service-icon-box { background-color: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; }
-
-‏        .card-green-gradient { background-color: #f0fdf4; border: 2px solid #bbf7d0; color: #15803d; }
-‏        .card-green-gradient .service-icon-box { background-color: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
-
-‏        .card-teal-gradient { background-color: #f0fdfa; border: 2px solid #99f6e4; color: #0f766e; }
-‏        .card-teal-gradient .service-icon-box { background-color: #ccfbf1; color: #0d9488; border: 1px solid #5eead4; }
-
-‏        .card-purple-gradient { background-color: #faf5ff; border: 2px solid #e9d5ff; color: #7e22ce; }
-‏        .card-purple-gradient .service-icon-box { background-color: #f3e8ff; color: #9333ea; border: 1px solid #c084fc; }
-
-‏        .card-orange-gradient { background-color: #fff7ed; border: 2px solid #ffedd5; color: #c2410c; }
-‏        .card-orange-gradient .service-icon-box { background-color: #ffedd5; color: #ea580c; border: 1px solid #fdba74; }
-
-‏        .page-header-title {
-‏            font-size: 17px;
-‏            font-weight: 800;
-‏            color: #0284c7;
-‏            margin-bottom: 12px;
+        .child-dropdown-item {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e293b;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
         }
 
-‏        .back-nav-bar {
-‏            display: flex;
-‏            align-items: center;
-‏            gap: 10px;
-‏            margin-bottom: 15px;
-‏            background: #ffffff;
-‏            padding: 8px 12px;
-‏            border-radius: 12px;
-‏            border: 1.5px solid #e2e8f0;
-‏            cursor: pointer;
-‏            width: fit-content;
-‏            color: var(--primary-teal);
-‏            font-weight: 800;
-‏            font-size: 13px;
-        }
-‏        .back-nav-bar:hover { background-color: #f0f9ff; }
-
-        /* الأقسام المصممة كالصورة تماماً */
-‏        .child-header-center {
-‏            display: flex;
-‏            flex-direction: column;
-‏            align-items: center;
-‏            margin-bottom: 15px;
+        .child-dropdown-item:hover {
+            background-color: #f0f9ff;
+            color: #0284c7;
         }
 
-‏        .child-avatar-lg {
-‏            width: 70px;
-‏            height: 70px;
-‏            border-radius: 50%;
-‏            border: 3px solid #70c7d2;
-‏            overflow: hidden;
-‏            margin-bottom: 6px;
-‏            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        .child-avatar-placeholder {
+            width: 72px;
+            height: 72px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #0d9488;
+            font-size: 28px;
+            border: 3px solid #99f6e4;
+            box-shadow: 0 3px 10px rgba(13, 148, 136, 0.1);
+            overflow: hidden;
         }
-‏        .child-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+        .child-avatar-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
-‏        .child-header-center h3 { font-size: 18px; font-weight: 800; color: var(--text-dark); }
-‏        .child-header-center p { font-size: 12px; color: var(--text-gray); font-weight: 600; }
-
-‏        .segmented-control {
-‏            display: flex;
-‏            background: #e5f1f3;
-‏            border-radius: 25px;
-‏            padding: 4px;
-‏            margin-bottom: 20px;
-‏            gap: 4px;
-        }
-
-‏        .segmented-btn {
-‏            flex: 1;
-‏            padding: 8px 12px;
-‏            border-radius: 20px;
-‏            border: none;
-‏            font-size: 13px;
-‏            font-weight: 700;
-‏            cursor: pointer;
-‏            color: var(--text-gray);
-‏            background: transparent;
-‏            transition: all 0.2s;
-‏            text-align: center;
+        .next-appointment-card {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 5px 15px rgba(2, 132, 199, 0.15);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-‏        .segmented-btn.active {
-‏            background-color: var(--primary-teal);
-‏            color: #ffffff;
-‏            box-shadow: 0 2px 6px rgba(33, 158, 188, 0.25);
+        .appointment-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
         }
 
-‏        .card-box {
-‏            background: #ffffff;
-‏            padding: 16px;
-‏            border-radius: 18px;
-‏            margin-bottom: 12px;
-‏            border: 1px solid #e6f0f2;
-‏            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+        .appointment-details h4 { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+        .appointment-details p { font-size: 11px; opacity: 0.95; margin-bottom: 1px; }
+
+        .details-btn-top {
+            background-color: #ffffff;
+            color: #0284c7;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            flex-shrink: 0;
         }
 
-‏        .teal-btn-action {
-‏            width: 100%;
-‏            background-color: var(--primary-teal);
-‏            color: #ffffff;
-‏            border: none;
-‏            padding: 12px;
-‏            border-radius: 14px;
-‏            font-size: 14px;
-‏            font-weight: 800;
-‏            cursor: pointer;
-‏            text-align: center;
-‏            box-shadow: 0 4px 12px rgba(33, 158, 188, 0.25);
+        .section-title-wrapper {
+            background: #e0f2fe;
+            color: #0284c7;
+            border: 1.5px solid #bae6fd;
+            padding: 6px 14px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 12px;
         }
 
-‏        .goals-list {
-‏            display: flex;
-‏            flex-direction: column;
-‏            gap: 10px;
-‏            margin-bottom: 20px;
+        .services-grid-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
 
-‏        .goal-item {
-‏            display: flex;
-‏            align-items: center;
-‏            justify-content: space-between;
-‏            font-size: 13px;
-‏            font-weight: 700;
-‏            color: #334155;
+        .service-card-item {
+            border-radius: 14px;
+            padding: 14px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-‏        .goal-check-icon { color: var(--primary-teal); font-size: 16px; }
+        .service-card-item:hover { transform: translateY(-3px); }
 
-        /* التمارين */
-‏        .exercise-card-horizontal {
-‏            background: #ffffff;
-‏            border-radius: 16px;
-‏            padding: 10px;
-‏            display: flex;
-‏            align-items: center;
-‏            justify-content: space-between;
-‏            margin-bottom: 12px;
-‏            border: 1px solid #e8f1f3;
+        .service-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            margin-bottom: 8px;
         }
 
-‏        .exercise-img-thumb {
-‏            width: 75px;
-‏            height: 70px;
-‏            border-radius: 12px;
-‏            overflow: hidden;
-‏            position: relative;
-‏            flex-shrink: 0;
-‏            background: #e2e8f0;
+        .service-card-item span { font-size: 12px; font-weight: 800; }
+
+        .card-red-gradient { background-color: #fff5f5; border: 2px solid #fecdd3; color: #be123c; }
+        .card-red-gradient .service-icon-box { background-color: #ffe4e6; color: #e11d48; border: 1px solid #fca5a5; }
+
+        .card-blue-gradient { background-color: #f0f9ff; border: 2px solid #bae6fd; color: #0369a1; }
+        .card-blue-gradient .service-icon-box { background-color: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; }
+
+        .card-green-gradient { background-color: #f0fdf4; border: 2px solid #bbf7d0; color: #15803d; }
+        .card-green-gradient .service-icon-box { background-color: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+
+        .card-teal-gradient { background-color: #f0fdfa; border: 2px solid #99f6e4; color: #0f766e; }
+        .card-teal-gradient .service-icon-box { background-color: #ccfbf1; color: #0d9488; border: 1px solid #5eead4; }
+
+        .card-purple-gradient { background-color: #faf5ff; border: 2px solid #e9d5ff; color: #7e22ce; }
+        .card-purple-gradient .service-icon-box { background-color: #f3e8ff; color: #9333ea; border: 1px solid #c084fc; }
+
+        .card-orange-gradient { background-color: #fff7ed; border: 2px solid #ffedd5; color: #c2410c; }
+        .card-orange-gradient .service-icon-box { background-color: #ffedd5; color: #ea580c; border: 1px solid #fdba74; }
+
+        .page-header-title { font-size: 17px; font-weight: 800; color: #0284c7; margin-bottom: 12px; }
+
+        .back-nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            cursor: pointer;
+            width: fit-content;
+            color: var(--primary-teal);
+            font-weight: 800;
+            font-size: 13px;
         }
-‏        .exercise-img-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-‏        .play-overlay-icon {
-‏            position: absolute;
-‏            top: 50%; left: 50%;
-‏            transform: translate(-50%, -50%);
-‏            color: #ffffff;
-‏            font-size: 18px;
-‏            background: rgba(33, 158, 188, 0.85);
-‏            width: 28px; height: 28px;
-‏            border-radius: 50%;
-‏            display: flex; align-items: center; justify-content: center;
+        .child-header-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-‏        .exercise-info-text { flex-grow: 1; padding-right: 12px; }
-‏        .exercise-info-text h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
-‏        .exercise-info-text p { font-size: 11px; color: var(--primary-teal); font-weight: 700; display: flex; align-items: center; gap: 4px; }
-
-        /* تطور طفلي */
-‏        .skill-progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-‏        .skill-icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-‏        .skill-bar-wrapper { flex-grow: 1; }
-‏        .skill-title-val { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; margin-bottom: 4px; }
-‏        .skill-bar-bg { width: 100%; height: 10px; background-color: #e2e8f0; border-radius: 10px; overflow: hidden; }
-‏        .skill-bar-fill { height: 100%; border-radius: 10px; }
-
-        /* التقارير */
-‏        .report-card-item {
-‏            background: #ffffff;
-‏            border-radius: 14px;
-‏            padding: 12px 14px;
-‏            display: flex; align-items: center; justify-content: space-between;
-‏            margin-bottom: 10px;
-‏            border: 1px solid #e8f1f3;
+        .child-avatar-lg {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #70c7d2;
+            overflow: hidden;
+            margin-bottom: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
         }
-‏        .report-icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .child-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
 
-‏        .media-attachments-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-‏        .media-thumb-box { height: 80px; border-radius: 12px; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
-‏        .media-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
+        .child-header-center h3 { font-size: 18px; font-weight: 800; color: var(--text-dark); }
+        .child-header-center p { font-size: 12px; color: var(--text-gray); font-weight: 600; }
 
-        /* الأطباء والمراحل */
-‏        .doctor-card {
-‏            background: #ffffff; border-radius: 16px; border: 2px solid #e2e8f0; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 12px;
+        .segmented-control {
+            display: flex;
+            background: #e5f1f3;
+            border-radius: 25px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
         }
-‏        .doctor-avatar-box { width: 70px; height: 70px; border-radius: 50%; background: #f1f5f9; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 2px solid #bae6fd; flex-shrink: 0; font-size: 28px; color: #0284c7; }
-‏        .doctor-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-‏        .doctor-info h4 { font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
 
-‏        .main-btn { width: 100%; background-color: #0284c7; color: white; border: none; padding: 11px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 8px; box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25); }
+        .segmented-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-gray);
+            background: transparent;
+            transition: all 0.2s;
+            text-align: center;
+        }
 
-‏        .wizard-steps { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #ffffff; padding: 12px 18px; border-radius: 14px; border: 2px solid #e2e8f0; }
-‏        .wizard-step { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-‏        .wizard-step-circle { width: 32px; height: 32px; border-radius: 50%; background-color: #f1f5f9; color: #64748b; display: flex; justify-content: center; align-items: center; font-weight: 800; font-size: 12px; border: 2px solid #cbd5e1; }
-‏        .wizard-step.active .wizard-step-circle { background-color: #0284c7; color: #ffffff; border-color: #0284c7; }
-‏        .wizard-step.completed .wizard-step-circle { background-color: #38bdf8; color: #ffffff; border-color: #38bdf8; }
-‏        .wizard-step span { font-size: 11px; font-weight: 700; color: #64748b; }
+        .segmented-btn.active {
+            background-color: var(--primary-teal);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(33, 158, 188, 0.25);
+        }
 
-‏        .dropdown-step-group { background: #ffffff; padding: 14px; border-radius: 14px; border: 2px solid #e2e8f0; margin-bottom: 10px; }
-‏        .dropdown-step-group label { display: block; font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 5px; }
-‏        .dropdown-step-group select, .dropdown-step-group input, .dropdown-step-group textarea { width: 100%; padding: 9px; border-radius: 10px; border: 2px solid #cbd5e1; font-size: 13px; font-weight: 600; background-color: #f8fafc; color: #1e293b; }
+        .card-box {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #e6f0f2;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+        }
 
-‏        .bottom-navigation { display: none; }
+        .teal-btn-action {
+            width: 100%;
+            background-color: var(--primary-teal);
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(33, 158, 188, 0.25);
+        }
 
-‏        @media (max-width: 768px) {
-‏            .sidebar { display: none; }
-‏            .main-wrapper { margin-right: 0; padding-bottom: 20px; }
-‏            .app-content { padding: 5px 12px 15px 12px; }
-‏            .dashboard-grid-top { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
-‏            .services-grid-box { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .goals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .goal-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .goal-check-icon { color: var(--primary-teal); font-size: 16px; }
+
+        .exercise-card-horizontal {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border: 1px solid #e8f1f3;
+        }
+
+        .exercise-img-thumb {
+            width: 75px;
+            height: 70px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            background: #e2e8f0;
+        }
+        .exercise-img-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .play-overlay-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 18px;
+            background: rgba(33, 158, 188, 0.85);
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .exercise-info-text { flex-grow: 1; padding-right: 12px; }
+        .exercise-info-text h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+        .exercise-info-text p { font-size: 11px; color: var(--primary-teal); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+
+        .skill-progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .skill-icon-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .skill-bar-wrapper { flex-grow: 1; }
+        .skill-title-val { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; margin-bottom: 4px; }
+        .skill-bar-bg { width: 100%; height: 10px; background-color: #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .skill-bar-fill { height: 100%; border-radius: 10px; }
+
+        .report-card-item {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 10px;
+            border: 1px solid #e8f1f3;
+        }
+        .report-icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+
+        .media-attachments-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        .media-thumb-box { height: 80px; border-radius: 12px; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+        .media-thumb-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .doctor-card {
+            background: #ffffff; border-radius: 16px; border: 2px solid #e2e8f0; padding: 14px; display: flex; gap: 14px; align-items: center; margin-bottom: 12px;
+        }
+        .doctor-avatar-box { width: 70px; height: 70px; border-radius: 50%; background: #f1f5f9; display: flex; justify-content: center; align-items: center; overflow: hidden; border: 2px solid #bae6fd; flex-shrink: 0; font-size: 28px; color: #0284c7; }
+        .doctor-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        .doctor-info h4 { font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+
+        .main-btn { width: 100%; background-color: #0284c7; color: white; border: none; padding: 11px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 8px; box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25); }
+
+        .wizard-steps { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #ffffff; padding: 12px 18px; border-radius: 14px; border: 2px solid #e2e8f0; }
+        .wizard-step { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .wizard-step-circle { width: 32px; height: 32px; border-radius: 50%; background-color: #f1f5f9; color: #64748b; display: flex; justify-content: center; align-items: center; font-weight: 800; font-size: 12px; border: 2px solid #cbd5e1; }
+        .wizard-step.active .wizard-step-circle { background-color: #0284c7; color: #ffffff; border-color: #0284c7; }
+        .wizard-step.completed .wizard-step-circle { background-color: #38bdf8; color: #ffffff; border-color: #38bdf8; }
+        .wizard-step span { font-size: 11px; font-weight: 700; color: #64748b; }
+
+        .dropdown-step-group { background: #ffffff; padding: 14px; border-radius: 14px; border: 2px solid #e2e8f0; margin-bottom: 10px; }
+        .dropdown-step-group label { display: block; font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 5px; }
+        .dropdown-step-group select, .dropdown-step-group input, .dropdown-step-group textarea { width: 100%; padding: 9px; border-radius: 10px; border: 2px solid #cbd5e1; font-size: 13px; font-weight: 600; background-color: #f8fafc; color: #1e293b; }
+
+        .bottom-navigation { display: none; }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-wrapper { margin-right: 0; padding-bottom: 20px; }
+            .app-content { padding: 5px 12px 15px 12px; }
+            .dashboard-grid-top { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+            .services-grid-box { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             
-‏            .bottom-navigation.show-nav {
-‏                position: fixed; bottom: 0; left: 0; width: 100%;
-‏                background-color: #ffffff; padding: 6px 10px;
-‏                display: flex; justify-content: space-around; align-items: center;
-‏                border-top: 2px solid #e2e8f0; z-index: 1000;
+            .bottom-navigation.show-nav {
+                position: fixed; bottom: 0; left: 0; width: 100%;
+                background-color: #ffffff; padding: 6px 10px;
+                display: flex; justify-content: space-around; align-items: center;
+                border-top: 2px solid #e2e8f0; z-index: 1000;
             }
-‏            .bottom-navigation .nav-item { flex-direction: column; gap: 2px; font-size: 10px; padding: 3px; width: auto; color: #64748b; background:none; border:none; }
-‏            .bottom-navigation .nav-item.active { color: #0284c7; }
+            .bottom-navigation .nav-item { flex-direction: column; gap: 2px; font-size: 10px; padding: 3px; width: auto; color: #64748b; background:none; border:none; }
+            .bottom-navigation .nav-item.active { color: #0284c7; }
         }
-‏    </style>
-‏</head>
-‏<body>
+    </style>
+</head>
+<body>
 
-‏    <div class="app-layout">
-        <!-- القائمة الجانبية -->
-‏        <div class="sidebar">
-‏            <div>
-‏                <div class="sidebar-brand"><i class="fa-solid fa-hands-holding-child"></i> مركز خطوة</div>
-‏                <div class="sidebar-menu">
-‏                    <button class="nav-item interactive-element active" id="side-home" onclick="switchTab('home-screen')"><i class="fa-solid fa-house"></i> الرئيسية</button>
-‏                    <button class="nav-item interactive-element" id="side-appointments" onclick="switchTab('appointments-screen')"><i class="fa-regular fa-calendar-check"></i> المواعيد</button>
-‏                    <button class="nav-item interactive-element" id="side-children" onclick="switchTab('children-screen')"><i class="fa-solid fa-children"></i> أطفالي</button>
-‏                    <button class="nav-item interactive-element" id="side-more" onclick="switchTab('more-screen')"><i class="fa-solid fa-bars"></i> المزيد وحساب الأم</button>
-‏                </div>
-‏            </div>
-‏            <div style="font-size: 11px; color: #94a3b8; text-align: center;">مركز خطوة للتأهيل © 2026</div>
-‏        </div>
+    <!-- شاشة تسجيل الدخول -->
+    <div class="auth-container" id="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo"><i class="fa-solid fa-hands-holding-child"></i></div>
+            <div class="auth-title">مركز خطوة للتأهيل</div>
+            <div class="auth-subtitle">أهلاً بك، يرجى تسجيل الدخول لمتابعة أطفالك وحجز المواعيد</div>
 
-‏        <div class="main-wrapper">
-            <!-- رأس الصفحة -->
-‏            <div class="app-header" id="main-app-header">
-‏                <div class="header-profile-text">
+            <div id="auth-step-phone">
+                <div class="input-group-auth">
+                    <label>اسم ولي الأمر (الأم)</label>
+                    <input type="text" id="login-mom-name" value="أم محمد" placeholder="أدخلي اسمك الكامل">
+                </div>
+                <div class="input-group-auth">
+                    <label>رقم الجوال المسجل</label>
+                    <input type="tel" id="login-phone" value="0501234566" placeholder="05xxxxxxxx">
+                </div>
+                <button class="auth-btn interactive-element" onclick="sendOTP()">إرسال رمز التحقق</button>
+            </div>
+
+            <div id="auth-step-otp" style="display: none;">
+                <div style="font-size: 12px; color: var(--primary-teal); font-weight: 700; margin-bottom: 15px;">
+                    تم إرسال رمز التحقق المؤلف من 4 أرقام إلى جوالك
+                </div>
+                <div class="input-group-auth">
+                    <label>رمز التحقق (OTP)</label>
+                    <input type="text" id="login-otp-code" placeholder="1234" maxlength="4" style="text-align: center; letter-spacing: 8px; font-size: 18px;">
+                </div>
+                <button class="auth-btn interactive-element" onclick="verifyAndLogin()">دخول للتطبيق</button>
+                <button class="interactive-element" onclick="backToPhoneStep()" style="background:none; border:none; color:#64748b; font-size:12px; margin-top:10px; cursor:pointer;">تغيير رقم الجوال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- الهيكل الرئيسي للتطبيق -->
+    <div class="app-layout">
+        <div class="sidebar">
+            <div>
+                <div class="sidebar-brand"><i class="fa-solid fa-hands-holding-child"></i> مركز خطوة</div>
+                <div class="sidebar-menu">
+                    <button class="nav-item interactive-element active" id="side-home" onclick="switchTab('home-screen')"><i class="fa-solid fa-house"></i> الرئيسية</button>
+                    <button class="nav-item interactive-element" id="side-appointments" onclick="switchTab('appointments-screen')"><i class="fa-regular fa-calendar-check"></i> المواعيد</button>
+                    <button class="nav-item interactive-element" id="side-children" onclick="switchTab('children-screen')"><i class="fa-solid fa-children"></i> أطفالي</button>
+                    <button class="nav-item interactive-element" id="side-more" onclick="switchTab('more-screen')"><i class="fa-solid fa-bars"></i> المزيد وحساب الأم</button>
+                </div>
+            </div>
+            <div style="font-size: 11px; color: #94a3b8; text-align: center;">مركز خطوة للتأهيل © 2026</div>
+        </div>
+
+        <div class="main-wrapper">
+            <div class="app-header" id="main-app-header">
+                <div class="header-profile-text">
                     أهلاً بك، <span id="header-mom-name">أم محمد</span>
-‏                </div>
-‏                <div class="notification-bell-btn interactive-element" onclick="switchTab('notifications-screen')">
-‏                    <i class="fa-regular fa-bell"></i>
-‏                    <div class="notification-badge">3</div>
-‏                </div>
-‏            </div>
+                </div>
+                <div class="notification-bell-btn interactive-element" onclick="switchTab('notifications-screen')">
+                    <i class="fa-regular fa-bell"></i>
+                    <div class="notification-badge">3</div>
+                </div>
+            </div>
 
             <!-- 1. الرئيسية -->
-‏            <div id="home-screen" class="app-content active">
-‏                <div class="dashboard-grid-top">
-‏                    <div class="child-profile-card">
-‏                        <div class="child-meta">
-‏                            <h3 id="home-child-name">سعود</h3>
-‏                            <p id="home-child-age">العمر: 4 سنوات و 3 أشهر</p>
-‏                            <div class="switch-child-container">
-‏                                <button class="switch-child-pill interactive-element" onclick="toggleChildrenMenu(event)">تبديل الطفل <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i></button>
-‏                                <div id="children-dropdown" class="children-dropdown-menu"></div>
-‏                            </div>
-‏                        </div>
-‏                        <div class="child-avatar-placeholder" id="home-child-avatar"><i class="fa-solid fa-child"></i></div>
-‏                    </div>
+            <div id="home-screen" class="app-content active">
+                <div class="dashboard-grid-top">
+                    <div class="child-profile-card">
+                        <div class="child-meta">
+                            <h3 id="home-child-name">سعود</h3>
+                            <p id="home-child-age">العمر: 4 سنوات و 3 أشهر</p>
+                            <div class="switch-child-container">
+                                <button class="switch-child-pill interactive-element" onclick="toggleChildrenMenu(event)">تبديل الطفل <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i></button>
+                                <div id="children-dropdown" class="children-dropdown-menu"></div>
+                            </div>
+                        </div>
+                        <div class="child-avatar-placeholder" id="home-child-avatar"><i class="fa-solid fa-child"></i></div>
+                    </div>
 
-‏                    <div>
-‏                        <div style="font-size: 12px; font-weight: 800; color: #0284c7; margin-bottom: 5px;"><i class="fa-regular fa-calendar-days"></i> الموعد القادم</div>
-‏                        <div class="next-appointment-card">
-‏                            <div class="appointment-top-row">
-‏                                <div class="appointment-details">
-‏                                    <h4 id="display-app-service">جلسة علاج طبيعي</h4>
-‏                                    <p id="display-app-date">الإثنين 12 أكتوبر 2026 - 10:00 صباحاً</p>
-‏                                    <p id="display-app-branch" style="font-size: 11px;">الفرع: الفرع الرئيسي - العاصمة</p>
-‏                                    <p id="display-app-doctor" style="font-size: 11px; font-weight: bold;">الطبيب: أ. ساره خالد</p>
-‏                                </div>
-‏                                <button class="details-btn-top interactive-element" onclick="switchTab('appointments-screen')">إدارة المواعيد</button>
-‏                            </div>
-‏                        </div>
-‏                    </div>
-‏                </div>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 800; color: #0284c7; margin-bottom: 5px;"><i class="fa-regular fa-calendar-days"></i> الموعد القادم</div>
+                        <div class="next-appointment-card">
+                            <div class="appointment-top-row">
+                                <div class="appointment-details">
+                                    <h4 id="display-app-service">جلسة علاج طبيعي</h4>
+                                    <p id="display-app-date">الإثنين 12 أكتوبر 2026 - 10:00 صباحاً</p>
+                                    <p id="display-app-branch" style="font-size: 11px;">الفرع: الفرع الرئيسي - العاصمة</p>
+                                    <p id="display-app-doctor" style="font-size: 11px; font-weight: bold;">الطبيب: أ. ساره خالد</p>
+                                </div>
+                                <button class="details-btn-top interactive-element" onclick="switchTab('appointments-screen')">إدارة المواعيد</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-‏                <div class="section-title-wrapper"><i class="fa-solid fa-layer-group"></i> الأقسام والخدمات الرئيسية</div>
+                <div class="section-title-wrapper"><i class="fa-solid fa-layer-group"></i> الأقسام والخدمات الرئيسية</div>
                 
-‏                <div class="services-grid-box" style="margin-bottom: 10px;">
-‏                    <div class="service-card-item card-red-gradient interactive-element" onclick="startBooking()">
-‏                        <div class="service-icon-box"><i class="fa-solid fa-calendar-plus"></i></div><span>حجز موعد</span>
-‏                    </div>
-‏                    <div class="service-card-item card-blue-gradient interactive-element" onclick="switchTab('treatment-plan-screen')">
-‏                        <div class="service-icon-box"><i class="fa-solid fa-file-waveform"></i></div><span>خطتي العلاجية</span>
-‏                    </div>
-‏                    <div class="service-card-item card-green-gradient interactive-element" onclick="switchTab('home-exercises-screen')">
-‏                        <div class="service-icon-box"><i class="fa-solid fa-house-chimney-medical"></i></div><span>تماريني المنزلية</span>
-‏                    </div>
-‏                </div>
+                <div class="services-grid-box" style="margin-bottom: 10px;">
+                    <div class="service-card-item card-red-gradient interactive-element" onclick="startBooking()">
+                        <div class="service-icon-box"><i class="fa-solid fa-calendar-plus"></i></div><span>حجز موعد</span>
+                    </div>
+                    <div class="service-card-item card-blue-gradient interactive-element" onclick="switchTab('treatment-plan-screen')">
+                        <div class="service-icon-box"><i class="fa-solid fa-file-waveform"></i></div><span>خطتي العلاجية</span>
+                    </div>
+                    <div class="service-card-item card-green-gradient interactive-element" onclick="switchTab('home-exercises-screen')">
+                        <div class="service-icon-box"><i class="fa-solid fa-house-chimney-medical"></i></div><span>تماريني المنزلية</span>
+                    </div>
+                </div>
 
-‏                <div class="services-grid-box">
-‏                    <div class="service-card-item card-teal-gradient interactive-element" onclick="switchTab('child-progress-screen')">
-‏                        <div class="service-icon-box"><i class="fa-solid fa-chart-line"></i></div><span>تطور طفلي</span>
-‏                    </div>
-‏                    <div class="service-card-item card-purple-gradient interactive-element" onclick="switchTab('medical-reports-screen')">
-‏                        <div class="service-icon-box"><i class="fa-solid fa-file-lines"></i></div><span>التقارير</span>
-‏                    </div>
-‏                    <div class="service-card-item card-orange-gradient interactive-element" onclick="switchTab('doctors-screen')">
-‏                        <div class="service-icon-box"><i class="fa-solid fa-user-doctor"></i></div><span>الفريق العلاجي</span>
-‏                    </div>
-‏                </div>
-‏            </div>
+                <div class="services-grid-box">
+                    <div class="service-card-item card-teal-gradient interactive-element" onclick="switchTab('child-progress-screen')">
+                        <div class="service-icon-box"><i class="fa-solid fa-chart-line"></i></div><span>تطور طفلي</span>
+                    </div>
+                    <div class="service-card-item card-purple-gradient interactive-element" onclick="switchTab('medical-reports-screen')">
+                        <div class="service-icon-box"><i class="fa-solid fa-file-lines"></i></div><span>التقارير</span>
+                    </div>
+                    <div class="service-card-item card-orange-gradient interactive-element" onclick="switchTab('doctors-screen')">
+                        <div class="service-icon-box"><i class="fa-solid fa-user-doctor"></i></div><span>الفريق العلاجي</span>
+                    </div>
+                </div>
+            </div>
 
-            <!-- 2. خطتي العلاجية (تصميم الصورة الأولى) -->
-‏            <div id="treatment-plan-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> خطتي العلاجية</div>
-‏                <div class="child-header-center">
-‏                    <div class="child-avatar-lg" id="plan-avatar-box"><i class="fa-solid fa-child" style="font-size:30px; color:#0284c7; display:flex; height:100%; align-items:center; justify-content:center;"></i></div>
-‏                    <h3 id="plan-child-name">سعود</h3>
-‏                    <p id="plan-child-age">4 سنوات و 3 أشهر</p>
-‏                </div>
-‏                <div class="segmented-control">
-‏                    <button class="segmented-btn">الخطط السابقة</button>
-‏                    <button class="segmented-btn active">الخطة الحالية</button>
-‏                </div>
-‏                <div class="card-box">
-‏                    <h4 style="font-size: 15px; font-weight: 800; margin-bottom:12px;">الأهداف العامة</h4>
-‏                    <div class="goals-list">
-‏                        <div class="goal-item"><span>تحسين التوازن</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
-‏                        <div class="goal-item"><span>تعزيز التآزر الحركي</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
-‏                        <div class="goal-item"><span>تطوير المهارات اليومية</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
-‏                        <div class="goal-item"><span>دعم التواصل واللغة</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
-‏                    </div>
-‏                    <h4 style="font-size: 15px; font-weight: 800; margin-bottom:6px;">الجلسات هذا الشهر</h4>
-‏                    <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; margin-bottom:6px;"><span>6 من 8 جلسات</span><span style="color:var(--primary-teal);">75%</span></div>
-‏                    <div style="width:100%; background:#e2e8f0; height:10px; border-radius:10px; overflow:hidden; margin-bottom:20px;">
-‏                        <div style="width:75%; height:100%; background:var(--primary-teal); border-radius:10px;"></div>
-‏                    </div>
-‏                    <button class="teal-btn-action interactive-element" onclick="alert('تفاصيل الخطة')">عرض التفاصيل الكاملة</button>
-‏                </div>
-‏            </div>
+            <!-- 2. خطتي العلاجية -->
+            <div id="treatment-plan-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> خطتي العلاجية</div>
+                <div class="child-header-center">
+                    <div class="child-avatar-lg" id="plan-avatar-box"><i class="fa-solid fa-child" style="font-size:30px; color:#0284c7; display:flex; height:100%; align-items:center; justify-content:center;"></i></div>
+                    <h3 id="plan-child-name">سعود</h3>
+                    <p id="plan-child-age">4 سنوات و 3 أشهر</p>
+                </div>
+                <div class="segmented-control">
+                    <button class="segmented-btn">الخطط السابقة</button>
+                    <button class="segmented-btn active">الخطة الحالية</button>
+                </div>
+                <div class="card-box">
+                    <h4 style="font-size: 15px; font-weight: 800; margin-bottom:12px;">الأهداف العامة</h4>
+                    <div class="goals-list">
+                        <div class="goal-item"><span>تحسين التوازن</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
+                        <div class="goal-item"><span>تعزيز التآزر الحركي</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
+                        <div class="goal-item"><span>تطوير المهارات اليومية</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
+                        <div class="goal-item"><span>دعم التواصل واللغة</span><i class="fa-regular fa-circle-check goal-check-icon"></i></div>
+                    </div>
+                    <h4 style="font-size: 15px; font-weight: 800; margin-bottom:6px;">الجلسات هذا الشهر</h4>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; margin-bottom:6px;"><span>6 من 8 جلسات</span><span style="color:var(--primary-teal);">75%</span></div>
+                    <div style="width:100%; background:#e2e8f0; height:10px; border-radius:10px; overflow:hidden; margin-bottom:20px;">
+                        <div style="width:75%; height:100%; background:var(--primary-teal); border-radius:10px;"></div>
+                    </div>
+                    <button class="teal-btn-action interactive-element" onclick="alert('تفاصيل الخطة')">عرض التفاصيل الكاملة</button>
+                </div>
+            </div>
 
-            <!-- 3. تماريني المنزلية (تصميم الصورة الثانية) -->
-‏            <div id="home-exercises-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> تماريني المنزلية</div>
-‏                <div class="segmented-control">
-‏                    <button class="segmented-btn">جميع التمارين</button>
-‏                    <button class="segmented-btn active">اليوم</button>
-‏                </div>
-‏                <div class="exercise-card-horizontal">
-‏                    <div class="exercise-img-thumb"><img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=200&auto=format&fit=crop&q=80"/><div class="play-overlay-icon"><i class="fa-solid fa-play"></i></div></div>
-‏                    <div class="exercise-info-text"><h4>تمرين الجلوس المتوازن</h4><p><i class="fa-regular fa-clock"></i> 5 دقائق</p></div>
-‏                    <i class="fa-solid fa-ellipsis-vertical" style="color:#cbd5e1;"></i>
-‏                </div>
-‏                <div class="exercise-card-horizontal">
-‏                    <div class="exercise-img-thumb"><img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=200&auto=format&fit=crop&q=80"/><div class="play-overlay-icon"><i class="fa-solid fa-play"></i></div></div>
-‏                    <div class="exercise-info-text"><h4>تمرين تقوية العضلات</h4><p><i class="fa-regular fa-clock"></i> 5 دقائق</p></div>
-‏                    <i class="fa-solid fa-ellipsis-vertical" style="color:#cbd5e1;"></i>
-‏                </div>
-‏                <div class="exercise-card-horizontal">
-‏                    <div class="exercise-img-thumb"><img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=200&auto=format&fit=crop&q=80"/><div class="play-overlay-icon"><i class="fa-solid fa-play"></i></div></div>
-‏                    <div class="exercise-info-text"><h4>تمرين التوازن</h4><p><i class="fa-regular fa-clock"></i> 5 دقائق</p></div>
-‏                    <i class="fa-solid fa-ellipsis-vertical" style="color:#cbd5e1;"></i>
-‏                </div>
-‏                <div class="exercise-card-horizontal">
-‏                    <div class="exercise-img-thumb"><img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=200&auto=format&fit=crop&q=80"/><div class="play-overlay-icon"><i class="fa-solid fa-play"></i></div></div>
-‏                    <div class="exercise-info-text"><h4>تمرين المهارات اليدوية</h4><p><i class="fa-regular fa-clock"></i> 5 دقائق</p></div>
-‏                    <i class="fa-solid fa-ellipsis-vertical" style="color:#cbd5e1;"></i>
-‏                </div>
-‏            </div>
+            <!-- 3. تماريني المنزلية -->
+            <div id="home-exercises-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> تماريني المنزلية</div>
+                <div class="segmented-control">
+                    <button class="segmented-btn">جميع التمارين</button>
+                    <button class="segmented-btn active">اليوم</button>
+                </div>
+                <div class="exercise-card-horizontal">
+                    <div class="exercise-img-thumb"><img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=200&auto=format&fit=crop&q=80"/><div class="play-overlay-icon"><i class="fa-solid fa-play"></i></div></div>
+                    <div class="exercise-info-text"><h4>تمرين الجلوس المتوازن</h4><p><i class="fa-regular fa-clock"></i> 5 دقائق</p></div>
+                    <i class="fa-solid fa-ellipsis-vertical" style="color:#cbd5e1;"></i>
+                </div>
+                <div class="exercise-card-horizontal">
+                    <div class="exercise-img-thumb"><img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=200&auto=format&fit=crop&q=80"/><div class="play-overlay-icon"><i class="fa-solid fa-play"></i></div></div>
+                    <div class="exercise-info-text"><h4>تمرين تقوية العضلات</h4><p><i class="fa-regular fa-clock"></i> 5 دقائق</p></div>
+                    <i class="fa-solid fa-ellipsis-vertical" style="color:#cbd5e1;"></i>
+                </div>
+            </div>
 
-            <!-- 4. تطور طفلي (تصميم الصورة الثالثة) -->
-‏            <div id="child-progress-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> تطور طفلي</div>
-‏                <div class="child-header-center">
-‏                    <div class="child-avatar-lg" id="prog-avatar-box"><i class="fa-solid fa-child" style="font-size:30px; color:#0284c7; display:flex; height:100%; align-items:center; justify-content:center;"></i></div>
-‏                    <h3 id="prog-child-name">سعود</h3>
-‏                    <p id="prog-child-age">4 سنوات و 3 أشهر</p>
-‏                </div>
-‏                <div class="segmented-control">
-‏                    <button class="segmented-btn">حسب المجال</button>
-‏                    <button class="segmented-btn active">نظرة عامة</button>
-‏                </div>
-‏                <div class="card-box">
-‏                    <div class="skill-progress-row">
-‏                        <div class="skill-icon-circle" style="background:#dcfce7; color:#22c55e;"><i class="fa-solid fa-child-reaching"></i></div>
-‏                        <div class="skill-bar-wrapper">
-‏                            <div class="skill-title-val"><span>الحركة الكبرى</span><span>80%</span></div>
-‏                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%; background:#22c55e;"></div></div>
-‏                        </div>
-‏                    </div>
-‏                    <div class="skill-progress-row">
-‏                        <div class="skill-icon-circle" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-hand"></i></div>
-‏                        <div class="skill-bar-wrapper">
-‏                            <div class="skill-title-val"><span>الحركة الدقيقة</span><span>60%</span></div>
-‏                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:60%; background:#0284c7;"></div></div>
-‏                        </div>
-‏                    </div>
-‏                    <div class="skill-progress-row">
-‏                        <div class="skill-icon-circle" style="background:#ffedd5; color:#ea580c;"><i class="fa-solid fa-comments"></i></div>
-‏                        <div class="skill-bar-wrapper">
-‏                            <div class="skill-title-val"><span>التواصل واللغة</span><span>45%</span></div>
-‏                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:45%; background:#ea580c;"></div></div>
-‏                        </div>
-‏                    </div>
-‏                    <div class="skill-progress-row">
-‏                        <div class="skill-icon-circle" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-shapes"></i></div>
-‏                        <div class="skill-bar-wrapper">
-‏                            <div class="skill-title-val"><span>المهارات اليومية</span><span>70%</span></div>
-‏                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:70%; background:#9333ea;"></div></div>
-‏                        </div>
-‏                    </div>
-‏                    <div class="skill-progress-row">
-‏                        <div class="skill-icon-circle" style="background:#ffe4e6; color:#e11d48;"><i class="fa-solid fa-heart"></i></div>
-‏                        <div class="skill-bar-wrapper">
-‏                            <div class="skill-title-val"><span>التفاعل الاجتماعي</span><span>60%</span></div>
-‏                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:60%; background:#e11d48;"></div></div>
-‏                        </div>
-‏                    </div>
-‏                    <div class="skill-progress-row">
-‏                        <div class="skill-icon-circle" style="background:#fef9c3; color:#ca8a04;"><i class="fa-solid fa-eye"></i></div>
-‏                        <div class="skill-bar-wrapper">
-‏                            <div class="skill-title-val"><span>المهارات الحسية</span><span>50%</span></div>
-‏                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:50%; background:#ca8a04;"></div></div>
-‏                        </div>
-‏                    </div>
-‏                </div>
-‏            </div>
+            <!-- 4. تطور طفلي -->
+            <div id="child-progress-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> تطور طفلي</div>
+                <div class="child-header-center">
+                    <div class="child-avatar-lg" id="prog-avatar-box"><i class="fa-solid fa-child" style="font-size:30px; color:#0284c7; display:flex; height:100%; align-items:center; justify-content:center;"></i></div>
+                    <h3 id="prog-child-name">سعود</h3>
+                    <p id="prog-child-age">4 سنوات و 3 أشهر</p>
+                </div>
+                <div class="segmented-control">
+                    <button class="segmented-btn">حسب المجال</button>
+                    <button class="segmented-btn active">نظرة عامة</button>
+                </div>
+                <div class="card-box">
+                    <div class="skill-progress-row">
+                        <div class="skill-icon-circle" style="background:#dcfce7; color:#22c55e;"><i class="fa-solid fa-child-reaching"></i></div>
+                        <div class="skill-bar-wrapper">
+                            <div class="skill-title-val"><span>الحركة الكبرى</span><span>80%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:80%; background:#22c55e;"></div></div>
+                        </div>
+                    </div>
+                    <div class="skill-progress-row">
+                        <div class="skill-icon-circle" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-hand"></i></div>
+                        <div class="skill-bar-wrapper">
+                            <div class="skill-title-val"><span>الحركة الدقيقة</span><span>60%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width:60%; background:#0284c7;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <!-- 5. التقارير (تصميم الصورة الرابعة) -->
-‏            <div id="medical-reports-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> التقارير</div>
-‏                <div class="report-card-item">
-‏                    <div style="display:flex; align-items:center; gap:12px;">
-‏                        <div class="report-icon-box" style="background:#ffe4e6; color:#e11d48;"><i class="fa-solid fa-file-lines"></i></div>
-‏                        <div><h4 style="font-size:13px; font-weight:800;">تقرير التقييم الأولي</h4><p style="font-size:11px; color:#94a3b8;">15 يناير 2025</p></div>
-‏                    </div>
-‏                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;"></i>
-‏                </div>
-‏                <div class="report-card-item">
-‏                    <div style="display:flex; align-items:center; gap:12px;">
-‏                        <div class="report-icon-box" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-file-invoice"></i></div>
-‏                        <div><h4 style="font-size:13px; font-weight:800;">تقرير دوري</h4><p style="font-size:11px; color:#94a3b8;">15 مارس 2025</p></div>
-‏                    </div>
-‏                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;"></i>
-‏                </div>
-‏                <div class="report-card-item">
-‏                    <div style="display:flex; align-items:center; gap:12px;">
-‏                        <div class="report-icon-box" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-file-waveform"></i></div>
-‏                        <div><h4 style="font-size:13px; font-weight:800;">تقرير التقدم</h4><p style="font-size:11px; color:#94a3b8;">20 مايو 2025</p></div>
-‏                    </div>
-‏                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;"></i>
-‏                </div>
-‏                <div class="report-card-item" style="margin-bottom:20px;">
-‏                    <div style="display:flex; align-items:center; gap:12px;">
-‏                        <div class="report-icon-box" style="background:#e0e7ff; color:#4338ca;"><i class="fa-solid fa-chart-pie"></i></div>
-‏                        <div><h4 style="font-size:13px; font-weight:800;">تقرير الخطة العلاجية</h4><p style="font-size:11px; color:#94a3b8;">1 أغسطس 2025</p></div>
-‏                    </div>
-‏                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;"></i>
-‏                </div>
-‏                <button class="teal-btn-action interactive-element" style="margin-bottom:20px;" onclick="alert('إنشاء تقرير جديد')">إنشاء تقرير جديد</button>
-‏                <div style="font-size:14px; font-weight:800; margin-bottom:8px;">مرفقات الصور والفيديو</div>
-‏                <div class="media-attachments-grid">
-‏                    <div class="media-thumb-box"><img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=200&auto=format&fit=crop&q=80"/></div>
-‏                    <div class="media-thumb-box"><img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=200&auto=format&fit=crop&q=80"/></div>
-‏                    <div class="media-thumb-box" style="background:#f8fafc; border:2px dashed #bae6fd; color:var(--primary-teal);" onclick="alert('إضافة مرفق')">
-‏                        <i class="fa-solid fa-plus" style="font-size:20px;"></i><span style="font-size:11px; font-weight:800; margin-top:4px;">إضافة</span>
-‏                    </div>
-‏                </div>
-‏            </div>
+            <!-- 5. التقارير -->
+            <div id="medical-reports-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> التقارير</div>
+                <div class="report-card-item">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="report-icon-box" style="background:#ffe4e6; color:#e11d48;"><i class="fa-solid fa-file-lines"></i></div>
+                        <div><h4 style="font-size:13px; font-weight:800;">تقرير التقييم الأولي</h4><p style="font-size:11px; color:#94a3b8;">15 يناير 2025</p></div>
+                    </div>
+                    <i class="fa-solid fa-download" style="color:var(--primary-teal); cursor:pointer;"></i>
+                </div>
+            </div>
 
-            <!-- 6. المواعيد (تظهر جميع المواعيد) -->
-‏            <div id="appointments-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
-‏                <div class="page-header-title">المواعيد المحجوزة القادمة</div>
-‏                <div id="appointments-list-container"></div>
-‏            </div>
+            <!-- 6. المواعيد -->
+            <div id="appointments-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
+                <div class="page-header-title">المواعيد المحجوزة القادمة</div>
+                <div id="appointments-list-container"></div>
+            </div>
 
             <!-- 7. أطفالي -->
-‏            <div id="children-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
-‏                <div class="page-header-title">أطفالي المسجلين</div>
-‏                <div id="children-list-container"></div>
-‏                <button class="main-btn interactive-element" onclick="openAddChildModal()"><i class="fa-solid fa-plus"></i> إضافة طفل جديد</button>
-‏            </div>
+            <div id="children-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
+                <div class="page-header-title">أطفالي المسجلين</div>
+                <div id="children-list-container"></div>
+                
+                <!-- نموذج إضافة طفل جديد -->
+                <div id="add-child-form" class="card-box" style="display:none; margin-top:10px;">
+                    <div class="dropdown-step-group" style="padding:0; border:none;">
+                        <label>اسم الطفل</label>
+                        <input type="text" id="new-child-name" placeholder="اسم الطفل">
+                    </div>
+                    <div class="dropdown-step-group" style="padding:0; border:none; margin-top:10px;">
+                        <label>تاريخ الميلاد</label>
+                        <input type="date" id="new-child-dob">
+                    </div>
+                    <div class="dropdown-step-group" style="padding:0; border:none; margin-top:10px;">
+                        <label>الجنس</label>
+                        <select id="new-child-gender"><option>ذكر</option><option>أنثى</option></select>
+                    </div>
+                    <button class="main-btn interactive-element" onclick="saveNewChild()">حفظ الطفل</button>
+                </div>
 
-            <!-- 8. إضافة/تعديل طفل -->
-‏            <div id="child-form-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('children-screen')"><i class="fa-solid fa-arrow-right"></i> العودة لأطفالي</div>
-‏                <div class="page-header-title" id="child-form-title">إضافة طفل جديد</div>
-‏                <div style="width: 100%; padding-bottom: 20px;">
-‏                    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 18px;">
-‏                        <div style="width: 85px; height: 85px; background: #e0f2fe; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #0284c7; font-size: 32px; border: 3px solid #7dd3fc; position: relative; overflow: hidden; margin-bottom: 8px;" id="preview-avatar-container">
-‏                            <i class="fa-solid fa-child" id="preview-avatar-icon"></i>
-‏                            <img id="preview-avatar-img" src="" style="display:none; width:100%; height:100%; object-fit:cover;" />
-‏                        </div>
-‏                        <label class="interactive-element" style="background: #e0f2fe; color: #0284c7; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; border: 1px solid #bae6fd;">
-‏                            <i class="fa-solid fa-camera"></i> رفع صورة / التقاط كاميرا
-‏                            <input type="file" id="child-image-input" accept="image/*" style="display: none;" onchange="previewChildImage(event)">
-‏                        </label>
-‏                    </div>
+                <button class="main-btn interactive-element" onclick="openAddChildModal()" style="margin-top:10px;"><i class="fa-solid fa-plus"></i> إضافة طفل جديد</button>
+            </div>
 
-‏                    <div class="dropdown-step-group"><label>اسم الطفل *</label><input type="text" id="input-child-name" placeholder="أدخل اسم الطفل الرباعي أو الثلاثي"></div>
-‏                    <div class="dropdown-step-group"><label>تاريخ الميلاد *</label><input type="date" id="input-child-dob" onchange="calculateAgeAndStage()"><p style="font-size: 11px; color: #0284c7; margin-top: 4px; font-weight: 700;" id="calculated-age-display">العمر المحسوب: يرجى اختيار تاريخ الميلاد</p></div>
-‏                    <div class="dropdown-step-group">
-‏                        <label>الجنس *</label>
-‏                        <div style="display: flex; gap: 10px;">
-‏                            <button type="button" id="gender-male-btn" class="interactive-element" onclick="setGender('ذكر')" style="flex: 1; padding: 10px; border-radius: 10px; border: 2px solid #0284c7; background-color: #0284c7; color: white; font-weight: 800; font-size: 13px; cursor: pointer;"><i class="fa-solid fa-mars"></i> ذكر</button>
-‏                            <button type="button" id="gender-female-btn" class="interactive-element" onclick="setGender('أنثى')" style="flex: 1; padding: 10px; border-radius: 10px; border: 2px solid #cbd5e1; background-color: #f8fafc; color: #64748b; font-weight: 800; font-size: 13px; cursor: pointer;"><i class="fa-solid fa-venus"></i> أنثى</button>
-‏                        </div>
-‏                    </div>
-‏                    <div class="dropdown-step-group">
-‏                        <label>المرحلة العمرية *</label>
-‏                        <select id="input-child-stage">
-‏                            <option value="برنامج التدخل المبكر (0 - 3 سنوات)">برنامج التدخل المبكر (0 - 3 سنوات)</option>
-‏                            <option value="مرحلة الطفولة المبكرة (3 - 6 سنوات)">مرحلة الطفولة المبكرة (3 - 6 سنوات)</option>
-‏                            <option value="مرحلة التأهيل المدرسي (6 سنوات فأكثر)">مرحلة التأهيل المدرسي (6 سنوات فأكثر)</option>
-‏                        </select>
-‏                    </div>
-‏                    <div class="dropdown-step-group"><label>ملاحظات (اختياري)</label><textarea id="input-child-notes" rows="2" placeholder="أي ملاحظات تخص الطفل..."></textarea></div>
-‏                    <button class="main-btn interactive-element" onclick="saveChildData()">حفظ وإضافة الطفل</button>
-‏                </div>
-‏            </div>
+            <!-- 8. حجز موعد جديد -->
+            <div id="booking-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
+                <div class="wizard-steps">
+                    <div class="wizard-step active" id="step-ind-1"><div class="wizard-step-circle">1</div><span>الخدمة</span></div>
+                    <div class="wizard-step" id="step-ind-2"><div class="wizard-step-circle">2</div><span>الفرع</span></div>
+                    <div class="wizard-step" id="step-ind-3"><div class="wizard-step-circle">3</div><span>الموعد</span></div>
+                    <div class="wizard-step" id="step-ind-4"><div class="wizard-step-circle">4</div><span>تأكيد</span></div>
+                </div>
 
-            <!-- 9. حجز موعد جديد (مع منع التعارض ومنع تكرار نفس القسم) -->
-‏            <div id="booking-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
-‏                <div class="wizard-steps">
-‏                    <div class="wizard-step active" id="step-ind-1"><div class="wizard-step-circle">1</div><span>الخدمة</span></div>
-‏                    <div class="wizard-step" id="step-ind-2"><div class="wizard-step-circle">2</div><span>الفرع</span></div>
-‏                    <div class="wizard-step" id="step-ind-3"><div class="wizard-step-circle">3</div><span>الموعد</span></div>
-‏                    <div class="wizard-step" id="step-ind-4"><div class="wizard-step-circle">4</div><span>تأكيد</span></div>
-‏                </div>
+                <div id="booking-step-1">
+                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">اختر الخدمة المطلوبة</div>
+                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة علاج طبيعي')"><div><h4 style="color:#0284c7; font-weight:800;">العلاج الطبيعي</h4><p style="font-size:12px; color:#64748b;">الجلسة الحركية والمشي</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
+                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة علاج وظيفي')"><div><h4 style="color:#0284c7; font-weight:800;">العلاج الوظيفي</h4><p style="font-size:12px; color:#64748b;">المهارات اليومية والحسية</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
+                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة نطق وتخاطب')"><div><h4 style="color:#0284c7; font-weight:800;">النطق والتخاطب</h4><p style="font-size:12px; color:#64748b;">تطوير التواصل واللغة</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
+                </div>
 
-‏                <div id="booking-step-1">
-‏                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">اختر الخدمة المطلوبة</div>
-‏                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة علاج طبيعي')"><div><h4 style="color:#0284c7; font-weight:800;">العلاج الطبيعي</h4><p style="font-size:12px; color:#64748b;">الجلسة الحركية والمشي</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
-‏                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة علاج وظيفي')"><div><h4 style="color:#0284c7; font-weight:800;">العلاج الوظيفي</h4><p style="font-size:12px; color:#64748b;">المهارات اليومية والحسية</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
-‏                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة نطق وتخاطب')"><div><h4 style="color:#0284c7; font-weight:800;">النطق والتخاطب</h4><p style="font-size:12px; color:#64748b;">تطوير التواصل واللغة</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
-‏                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectService('جلسة تأهيل عصبي')"><div><h4 style="color:#0284c7; font-weight:800;">التأهيل العصبي</h4><p style="font-size:12px; color:#64748b;">الحالات العصبية للأطفال</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
-‏                </div>
+                <div id="booking-step-2" style="display: none;">
+                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">اختر الفرع المطلوب</div>
+                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectBranch('الفرع الرئيسي - العاصمة')"><div><h4 style="color:#0284c7; font-weight:800;">الفرع الرئيسي</h4><p style="font-size:12px; color:#64748b;">المقر الرئيسي المتكامل</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
+                    <button class="interactive-element" onclick="goToStep(1)" style="background:none; border:none; color:#64748b; width:100%; margin-top:8px; cursor:pointer;">العودة للخدمات</button>
+                </div>
 
-‏                <div id="booking-step-2" style="display: none;">
-‏                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">اختر الفرع المطلوب</div>
-‏                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectBranch('الفرع الرئيسي - العاصمة')"><div><h4 style="color:#0284c7; font-weight:800;">الفرع الرئيسي</h4><p style="font-size:12px; color:#64748b;">المقر الرئيسي المتكامل</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
-‏                    <div class="card-box interactive-element" style="display:flex; justify-content:space-between; align-items:center;" onclick="selectBranch('فرع الشمال - التخصصي')"><div><h4 style="color:#0284c7; font-weight:800;">فرع الشمال</h4><p style="font-size:12px; color:#64748b;">طريق الملك عبد العزيز</p></div><i class="fa-solid fa-chevron-left" style="color:#cbd5e1;"></i></div>
-‏                    <button class="interactive-element" onclick="goToStep(1)" style="background:none; border:none; color:#64748b; width:100%; margin-top:8px; cursor:pointer;">العودة للخدمات</button>
-‏                </div>
+                <div id="booking-step-3" style="display: none;">
+                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">اختر الطبيب والتاريخ والوقت</div>
+                    <div class="dropdown-step-group">
+                        <label>اختر الدكتور</label>
+                        <select id="dropdown-doctor" onchange="onDoctorSelected()">
+                            <option value="">-- اختر الطبيب --</option>
+                            <option value="أ. ساره خالد">أ. ساره خالد</option>
+                            <option value="د. نورة أحمد">د. نورة أحمد</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-step-group" id="wrapper-day" style="display: none;">
+                        <label>اختر اليوم أو التاريخ</label>
+                        <select id="dropdown-day" onchange="onDaySelected()">
+                            <option value="">-- اختر اليوم --</option>
+                            <option value="الأحد 11 أكتوبر 2026">الأحد 11 أكتوبر</option>
+                            <option value="الإثنين 12 أكتوبر 2026">الإثنين 12 أكتوبر</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-step-group" id="wrapper-time" style="display: none;">
+                        <label>اختر الموعد</label>
+                        <select id="dropdown-time">
+                            <option value="">-- اختر الموعد المتاح --</option>
+                            <option value="08:00 صباحاً">08:00 صباحاً</option>
+                            <option value="10:00 صباحاً">10:00 صباحاً</option>
+                        </select>
+                    </div>
+                    <button class="main-btn interactive-element" style="margin-top:15px;" onclick="proceedToConfirmation()">التالي (التأكيد)</button>
+                </div>
 
-‏                <div id="booking-step-3" style="display: none;">
-‏                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">اختر الطبيب والتاريخ والوقت</div>
-‏                    <div class="dropdown-step-group">
-‏                        <label>اختر الدكتور</label>
-‏                        <select id="dropdown-doctor" onchange="onDoctorSelected()">
-‏                            <option value="">-- اختر الطبيب --</option>
-‏                            <option value="أ. ساره خالد">أ. ساره خالد</option>
-‏                            <option value="أ. عبد الله محمد">أ. عبد الله محمد</option>
-‏                            <option value="د. نورة أحمد">د. نورة أحمد</option>
-‏                        </select>
-‏                    </div>
-‏                    <div class="dropdown-step-group" id="wrapper-day" style="display: none;">
-‏                        <label>اختر اليوم أو التاريخ</label>
-‏                        <select id="dropdown-day" onchange="onDaySelected()">
-‏                            <option value="">-- اختر اليوم --</option>
-‏                            <option value="الأحد 11 أكتوبر 2026">الأحد 11 أكتوبر</option>
-‏                            <option value="الإثنين 12 أكتوبر 2026">الإثنين 12 أكتوبر</option>
-‏                            <option value="الثلاثاء 13 أكتوبر 2026">الثلاثاء 13 أكتوبر</option>
-‏                        </select>
-‏                    </div>
-‏                    <div class="dropdown-step-group" id="wrapper-time" style="display: none;">
-‏                        <label>اختر الموعد</label>
-‏                        <select id="dropdown-time">
-‏                            <option value="">-- اختر الموعد المتاح --</option>
-‏                            <option value="08:00 صباحاً">08:00 صباحاً</option>
-‏                            <option value="10:00 صباحاً">10:00 صباحاً</option>
-‏                            <option value="12:00 ظهراً">12:00 ظهراً</option>
-‏                        </select>
-‏                    </div>
-‏                    <button class="main-btn interactive-element" style="margin-top:15px;" onclick="proceedToConfirmation()">التالي (التأكيد)</button>
-‏                    <button class="interactive-element" onclick="goToStep(2)" style="background:none; border:none; color:#64748b; width:100%; margin-top:8px; cursor:pointer;">العودة</button>
-‏                </div>
+                <div id="booking-step-4" style="display: none;">
+                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">تأكيد تفاصيل الحجز</div>
+                    <div class="card-box" style="background:#f8fafc; border:2px solid #bae6fd;">
+                        <p style="font-size:12px; color:#64748b;">الخدمة المطلوبة:</p><h4 id="conf-service" style="color:#0284c7; font-weight:800;">-</h4>
+                        <p style="font-size:12px; color:#64748b;">الفرع المختار:</p><h4 id="conf-branch" style="color:#0284c7; font-weight:800;">-</h4>
+                        <p style="font-size:12px; color:#64748b;">الطبيب المعالج:</p><h4 id="conf-doctor" style="color:#0284c7; font-weight:800;">-</h4>
+                        <p style="font-size:12px; color:#64748b;">الموعد والتاريخ:</p><h4 id="conf-datetime" style="color:#0284c7; font-weight:800;">-</h4>
+                    </div>
+                    <button class="main-btn interactive-element" onclick="finalizeBooking()">تأكيد وإرسال الحجز النهائي</button>
+                </div>
+            </div>
 
-‏                <div id="booking-step-4" style="display: none;">
-‏                    <div class="page-header-title" style="font-size:15px; margin-bottom:10px;">تأكيد تفاصيل الحجز</div>
-‏                    <div class="card-box" style="background:#f8fafc; border:2px solid #bae6fd;">
-‏                        <p style="font-size:12px; color:#64748b;">الخدمة المطلوبة:</p><h4 id="conf-service" style="color:#0284c7; font-weight:800;">-</h4>
-‏                        <p style="font-size:12px; color:#64748b;">الفرع المختار:</p><h4 id="conf-branch" style="color:#0284c7; font-weight:800;">-</h4>
-‏                        <p style="font-size:12px; color:#64748b;">الطبيب المعالج:</p><h4 id="conf-doctor" style="color:#0284c7; font-weight:800;">-</h4>
-‏                        <p style="font-size:12px; color:#64748b;">الموعد والتاريخ:</p><h4 id="conf-datetime" style="color:#0284c7; font-weight:800;">-</h4>
-‏                    </div>
-‏                    <button class="main-btn interactive-element" onclick="finalizeBooking()">تأكيد وإرسال الحجز النهائي</button>
-‏                    <button class="interactive-element" onclick="goToStep(3)" style="background:none; border:none; color:#64748b; width:100%; margin-top:8px; cursor:pointer;">تعديل الموعد</button>
-‏                </div>
-‏            </div>
+            <!-- الإشعارات -->
+            <div id="notifications-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> الإشعارات</div>
+                <div class="report-card-item">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="report-icon-box" style="background:#e0f2fe; color:#0284c7;"><i class="fa-regular fa-calendar-check"></i></div>
+                        <div><h4 style="font-size:13px; font-weight:800;">تذكير بموعد جلسة العلاج الطبيعي</h4><p style="font-size:11px; color:#94a3b8;">قبل الموعد بيوم واحد</p></div>
+                    </div>
+                </div>
+                <div class="report-card-item">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="report-icon-box" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-house-chimney-medical"></i></div>
+                        <div><h4 style="font-size:13px; font-weight:800;">تمارين اليوم المنزلية بانتظارك</h4><p style="font-size:11px; color:#94a3b8;">تمرينان جديدان</p></div>
+                    </div>
+                </div>
+                <div class="report-card-item">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="report-icon-box" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-file-lines"></i></div>
+                        <div><h4 style="font-size:13px; font-weight:800;">تم إضافة تقرير جديد</h4><p style="font-size:11px; color:#94a3b8;">يمكنك تحميله من صفحة التقارير</p></div>
+                    </div>
+                </div>
+            </div>
 
-            <!-- 10. الفريق العلاجي والمزيد والخدمات الأخرى -->
-‏            <div id="doctors-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
-‏                <div class="page-header-title">قائمة الفريق العلاجي</div>
-‏                <div id="doctors-list-container"></div>
-‏            </div>
+            <!-- الفريق العلاجي -->
+            <div id="doctors-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-chevron-right"></i> الفريق العلاجي</div>
+                <div class="doctor-card">
+                    <div class="doctor-avatar-box"><i class="fa-solid fa-user-doctor"></i></div>
+                    <div class="doctor-info"><h4>أ. ساره خالد</h4><p style="font-size:12px; color:#64748b;">أخصائية علاج طبيعي</p></div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-avatar-box"><i class="fa-solid fa-user-doctor"></i></div>
+                    <div class="doctor-info"><h4>د. نورة أحمد</h4><p style="font-size:12px; color:#64748b;">أخصائية علاج وظيفي ونطق</p></div>
+                </div>
+            </div>
 
-‏            <div id="notifications-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
-‏                <div class="page-header-title">التنبيهات والإشعارات</div>
-‏                <div class="card-box"><p style="font-size:13px; color:#334155;">نذكركم بموعد الجلسة غداً في تمام الساعة 10:00 صباحاً.</p></div>
-‏            </div>
+            <!-- 9. المزيد وحساب الأم -->
+            <div id="more-screen" class="app-content">
+                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
+                <div class="page-header-title">حساب ولي الأمر (الأم)</div>
+                <div class="card-box">
+                    <div style="margin-bottom:10px;"><label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">اسم الوالدة</label><input type="text" id="mom-name-input" value="أم محمد" style="width:100%; padding:9px; border:2px solid #e2e8f0; border-radius:10px;"></div>
+                    <div style="margin-bottom:10px;"><label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">رقم الجوال</label><input type="text" id="mom-phone-input" value="0501234566" style="width:100%; padding:9px; border:2px solid #e2e8f0; border-radius:10px;"></div>
+                    <button class="main-btn interactive-element" onclick="updateMomData()">تحديث البيانات</button>
+                    <button class="interactive-element" onclick="logoutAccount()" style="width:100%; background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:11px; border-radius:12px; font-weight:800; font-size:14px; cursor:pointer; margin-top:10px;">
+                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+        </div>
 
-‏            <div id="more-screen" class="app-content">
-‏                <div class="back-nav-bar interactive-element" onclick="switchTab('home-screen')"><i class="fa-solid fa-arrow-right"></i> العودة للرئيسية</div>
-‏                <div class="page-header-title">حساب ولي الأمر (الأم)</div>
-‏                <div class="card-box">
-‏                    <div style="margin-bottom:10px;"><label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">اسم الوالدة</label><input type="text" id="mom-name-input" value="أم محمد" style="width:100%; padding:9px; border:2px solid #e2e8f0; border-radius:10px;"></div>
-‏                    <div style="margin-bottom:10px;"><label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">رقم الجوال</label><input type="text" id="mom-phone-input" value="0501234566" style="width:100%; padding:9px; border:2px solid #e2e8f0; border-radius:10px;"></div>
-‏                    <div style="margin-bottom:10px;"><label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">البريد الإلكتروني</label><input type="email" id="mom-email-input" value="om.mohammed@email.com" style="width:100%; padding:9px; border:2px solid #e2e8f0; border-radius:10px;"></div>
-‏                    <button class="main-btn interactive-element" onclick="updateMomData()">تحديث بيانات الحساب</button>
-‏                </div>
-‏            </div>
-‏        </div>
+        <div class="bottom-navigation show-nav" id="mob-bottom-nav">
+            <button class="nav-item interactive-element active" id="mob-home" onclick="switchTab('home-screen')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></button>
+            <button class="nav-item interactive-element" id="mob-appointments" onclick="switchTab('appointments-screen')"><i class="fa-regular fa-calendar-check"></i><span>المواعيد</span></button>
+            <button class="nav-item interactive-element" id="mob-children" onclick="switchTab('children-screen')"><i class="fa-solid fa-children"></i><span>أطفالي</span></button>
+            <button class="nav-item interactive-element" id="mob-more" onclick="switchTab('more-screen')"><i class="fa-solid fa-bars"></i><span>المزيد</span></button>
+        </div>
+    </div>
 
-        <!-- الشريط السفلي للجوال -->
-‏        <div class="bottom-navigation show-nav" id="mob-bottom-nav">
-‏            <button class="nav-item interactive-element active" id="mob-home" onclick="switchTab('home-screen')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></button>
-‏            <button class="nav-item interactive-element" id="mob-appointments" onclick="switchTab('appointments-screen')"><i class="fa-regular fa-calendar-check"></i><span>المواعيد</span></button>
-‏            <button class="nav-item interactive-element" id="mob-children" onclick="switchTab('children-screen')"><i class="fa-solid fa-children"></i><span>أطفالي</span></button>
-‏            <button class="nav-item interactive-element" id="mob-more" onclick="switchTab('more-screen')"><i class="fa-solid fa-bars"></i><span>المزيد</span></button>
-‏        </div>
-‏    </div>
+    <script>
+        const STORE = 'khatwa_data', SESSION = 'khatwa_session';
+        let generatedOTP = "";
+        let currentChildIndex = 0;
+        let bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
 
-‏    <script>
-‏        let childrenList = [
-‏            { name: "سعود", dob: "2022-01-15", ageText: "4 سنوات و 3 أشهر", gender: "ذكر", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)", notes: "", image: "" },
-‏            { name: "ماهر", dob: "2023-04-10", ageText: "3 سنوات و 6 أشهر", gender: "ذكر", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)", notes: "", image: "" },
-‏            { name: "ديمة", dob: "2021-10-05", ageText: "5 سنوات", gender: "أنثى", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)", notes: "", image: "" }
+        let childrenList = [
+            { name: "سعود", dob: "2022-01-15", ageText: "4 سنوات و 3 أشهر", gender: "ذكر", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)" },
+            { name: "ماهر", dob: "2023-04-10", ageText: "3 سنوات و 6 أشهر", gender: "ذكر", stage: "مرحلة الطفولة المبكرة (3 - 6 سنوات)" }
+        ];
+        let appointmentsList = [
+            { id: 1, childName: "سعود", service: "جلسة علاج طبيعي", branch: "الفرع الرئيسي - العاصمة", doctor: "أ. ساره خالد", day: "الإثنين 12 أكتوبر 2026", time: "10:00 صباحاً" }
         ];
 
-‏        let appointmentsList = [
-            {
-‏                id: 1,
-‏                childName: "سعود",
-‏                service: "جلسة علاج طبيعي",
-‏                branch: "الفرع الرئيسي - العاصمة",
-‏                doctor: "أ. ساره خالد",
-‏                day: "الإثنين 12 أكتوبر 2026",
-‏                time: "10:00 صباحاً"
-            }
-        ];
-
-‏        let doctorsList = [
-‏            { name: "أ. ساره خالد", gender: "أنثى", specialty: "أخصائية علاج وظيفي وتكامل حسي", desc: "متخصصة في المهارات الحركية الدقيقة والتكامل الحسي للأطفال.", img: "" },
-‏            { name: "أ. عبد الله محمد", gender: "ذكر", specialty: "أخصائي علاج طبيعي وتأهيل حركي", desc: "خبرة 8 سنوات في علاج المشاكل الحركية.", img: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&auto=format&fit=crop&q=80" },
-‏            { name: "د. نورة أحمد", gender: "أنثى", specialty: "استشارية نطق وتخاطب وتواصل", desc: "متخصصة في علاج التأخر اللغوي ومشاكل البلع.", img: "" }
-        ];
-
-‏        let currentChildIndex = 0;
-‏        let editingChildIndex = null;
-‏        let selectedGender = "ذكر";
-‏        let tempAvatarBase64 = "";
-‏        let bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
-
-‏        function toggleChildrenMenu(event) {
-‏            event.stopPropagation();
-‏            document.getElementById('children-dropdown').classList.toggle('show');
+        // الحفظ والتحميل
+        function save() {
+            try { localStorage.setItem(STORE, JSON.stringify({ childrenList, appointmentsList })); } catch (e) {}
+        }
+        function load() {
+            try {
+                const d = JSON.parse(localStorage.getItem(STORE) || 'null');
+                if (d && d.childrenList && d.childrenList.length) { childrenList = d.childrenList; appointmentsList = d.appointmentsList || []; }
+            } catch (e) {}
+        }
+        function getSession() {
+            try { return JSON.parse(localStorage.getItem(SESSION) || 'null'); } catch (e) { return null; }
+        }
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
 
-‏        window.onclick = function(event) {
-‏            if (!event.target.closest('.switch-child-container')) {
-‏                const dropdowns = document.getElementsByClassName('children-dropdown-menu');
-‏                for (let i = 0; i < dropdowns.length; i++) {
-‏                    if (dropdowns[i].classList.contains('show')) { dropdowns[i].classList.remove('show'); }
-                }
+        // تسجيل الدخول والـ OTP
+        function showAuth(show) {
+            const a = document.getElementById('auth-screen');
+            if (show) {
+                a.style.display = 'flex';
+                requestAnimationFrame(() => { a.style.opacity = '1'; });
+            } else {
+                a.style.transition = 'opacity 200ms';
+                a.style.opacity = '0';
+                setTimeout(() => { a.style.display = 'none'; }, 200);
             }
         }
 
-‏        function selectChild(index) {
-‏            currentChildIndex = index;
-‏            const child = childrenList[index];
-
-‏            document.getElementById('home-child-name').innerText = child.name;
-‏            document.getElementById('home-child-age').innerText = "العمر: " + child.ageText;
-            
-            // تحديث رؤوس الصفحات المخصصة
-‏            document.getElementById('plan-child-name').innerText = child.name;
-‏            document.getElementById('plan-child-age').innerText = child.ageText;
-‏            document.getElementById('prog-child-name').innerText = child.name;
-‏            document.getElementById('prog-child-age').innerText = child.ageText;
-
-‏            const homeAvatarContainer = document.getElementById('home-child-avatar');
-‏            const planAvatarBox = document.getElementById('plan-avatar-box');
-‏            const progAvatarBox = document.getElementById('prog-avatar-box');
-
-‏            if (child.image) {
-‏                const imgTag = `<img src="${child.image}" style="width:100%; height:100%; object-fit:cover;" />`;
-‏                homeAvatarContainer.innerHTML = imgTag;
-‏                planAvatarBox.innerHTML = imgTag;
-‏                progAvatarBox.innerHTML = imgTag;
-‏            } else {
-‏                const iconTag = `<i class="fa-solid fa-child" style="font-size:28px; color:#0284c7; display:flex; height:100%; align-items:center; justify-content:center;"></i>`;
-‏                homeAvatarContainer.innerHTML = iconTag;
-‏                planAvatarBox.innerHTML = iconTag;
-‏                progAvatarBox.innerHTML = iconTag;
-            }
-
-‏            document.getElementById('children-dropdown').classList.remove('show');
-‏            renderChildrenListScreen();
-‏            updateNextAppointmentCard();
+        function applyMomData(name, phone) {
+            document.getElementById('header-mom-name').innerText = name;
+            document.getElementById('mom-name-input').value = name;
+            document.getElementById('mom-phone-input').value = phone;
         }
 
-‏        function updateNextAppointmentCard() {
-‏            const activeChildName = childrenList[currentChildIndex].name;
-‏            const childApts = appointmentsList.filter(a => a.childName === activeChildName);
-            
-‏            if (childApts.length > 0) {
-‏                const nextApt = childApts[0];
-‏                document.getElementById('display-app-service').innerText = nextApt.service;
-‏                document.getElementById('display-app-date').innerText = nextApt.day + " - " + nextApt.time;
-‏                document.getElementById('display-app-branch').innerText = "الفرع: " + nextApt.branch;
-‏                document.getElementById('display-app-doctor').innerText = "الطبيب: " + nextApt.doctor;
-‏            } else {
-‏                document.getElementById('display-app-service').innerText = "لا توجد مواعيد قادمة";
-‏                document.getElementById('display-app-date').innerText = "قم بحجز موعد جديد الآن";
-‏                document.getElementById('display-app-branch').innerText = "";
-‏                document.getElementById('display-app-doctor').innerText = "";
+        function sendOTP() {
+            const phone = document.getElementById('login-phone').value.trim();
+            const name = document.getElementById('login-mom-name').value.trim();
+            if (!phone || !name) { alert('الرجاء إدخال الاسم ورقم الجوال.'); return; }
+            if (!/^05\d{8}$/.test(phone)) { alert('رقم الجوال غير صحيح، يجب أن يبدأ بـ 05 ويتكون من 10 أرقام.'); return; }
+
+            generatedOTP = String(Math.floor(1000 + Math.random() * 9000));
+            document.querySelector('#auth-step-otp > div').innerText =
+                'تم إرسال رمز التحقق المؤلف من 4 أرقام إلى جوالك (رمز التجربة: ' + generatedOTP + ')';
+            document.getElementById('login-otp-code').value = "";
+            document.getElementById('auth-step-phone').style.display = 'none';
+            document.getElementById('auth-step-otp').style.display = 'block';
+        }
+
+        function backToPhoneStep() {
+            document.getElementById('auth-step-otp').style.display = 'none';
+            document.getElementById('auth-step-phone').style.display = 'block';
+        }
+
+        function verifyAndLogin() {
+            const otp = document.getElementById('login-otp-code').value.trim();
+            if (generatedOTP && otp === generatedOTP) {
+                const name = document.getElementById('login-mom-name').value.trim();
+                const phone = document.getElementById('login-phone').value.trim();
+                try { localStorage.setItem(SESSION, JSON.stringify({ name, phone })); } catch (e) {}
+                applyMomData(name, phone);
+                generatedOTP = "";
+                showAuth(false);
+            } else {
+                alert('رمز التحقق غير صحيح، حاول مرة أخرى.');
             }
         }
 
-‏        function renderAppointmentsListScreen() {
-‏            const container = document.getElementById('appointments-list-container');
-‏            container.innerHTML = "";
+        function logoutAccount() {
+            if (confirm('هل تريد تسجيل الخروج والعودة لصفحة الدخول؟')) {
+                try { localStorage.removeItem(SESSION); } catch (e) {}
+                generatedOTP = "";
+                backToPhoneStep();
+                switchTab('home-screen');
+                showAuth(true);
+            }
+        }
 
-‏            if (appointmentsList.length === 0) {
-‏                container.innerHTML = "<p style='text-align:center; color:#64748b; padding:20px;'>لا توجد مواعيد حالياً.</p>";
-‏                return;
+        // التنقل
+        const NAV_MAP = {
+            'home-screen': 'home',
+            'appointments-screen': 'appointments',
+            'children-screen': 'children',
+            'more-screen': 'more'
+        };
+
+        function switchTab(screenId) {
+            document.querySelectorAll('.app-content').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            document.querySelectorAll('.sidebar .nav-item, .bottom-navigation .nav-item').forEach(b => b.classList.remove('active'));
+            const key = NAV_MAP[screenId];
+            if (key) {
+                document.getElementById('side-' + key).classList.add('active');
+                document.getElementById('mob-' + key).classList.add('active');
             }
 
-‏            appointmentsList.forEach((apt) => {
-‏                container.innerHTML += `
-‏                    <div class="card-box" style="border-right: 5px solid #0284c7; margin-bottom: 12px;">
-‏                        <h4 style="color: #0284c7; margin-bottom: 4px; font-weight:800;">${apt.service}</h4>
-‏                        <p style="font-size: 13px; color: #475569;">الطفل: <span>${apt.childName}</span></p>
-‏                        <p style="font-size: 13px; color: #475569;">التاريخ والموعد: <span>${apt.day} - ${apt.time}</span></p>
-‏                        <p style="font-size: 13px; color: #475569;">الفرع: <span>${apt.branch}</span></p>
-‏                        <p style="font-size: 13px; color: #475569;">الطبيب: <span>${apt.doctor}</span></p>
-‏                        <div style="margin-top: 12px; display: flex; gap: 8px;">
-‏                            <button class="interactive-element" onclick="cancelAppointment(${apt.id})" style="background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:7px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">إلغاء الموعد</button>
-‏                        </div>
-‏                    </div>
-                `;
+            if (screenId === 'appointments-screen') renderAppointments();
+            if (screenId === 'children-screen') renderChildren();
+            document.getElementById('children-dropdown').classList.remove('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // الأطفال
+        function calcAge(dob) {
+            const d = new Date(dob), n = new Date();
+            let m = (n.getFullYear() - d.getFullYear()) * 12 + n.getMonth() - d.getMonth();
+            if (n.getDate() < d.getDate()) m--;
+            if (m < 0) m = 0;
+            const y = Math.floor(m / 12), mm = m % 12;
+            const parts = [];
+            if (y > 0) parts.push(y + (y === 1 ? " سنة" : y === 2 ? " سنتان" : " سنوات"));
+            if (mm > 0 || y === 0) parts.push(mm + " أشهر");
+            return parts.join(" و ");
+        }
+
+        function stageFor(dob) {
+            const years = new Date().getFullYear() - new Date(dob).getFullYear();
+            if (years < 3) return "مرحلة الرضاعة والمشي المبكر (أقل من 3 سنوات)";
+            if (years <= 6) return "مرحلة الطفولة المبكرة (3 - 6 سنوات)";
+            return "مرحلة الطفولة (7 سنوات فأكثر)";
+        }
+
+        function selectChild(index) {
+            currentChildIndex = index;
+            const child = childrenList[index];
+            document.getElementById('home-child-name').innerText = child.name;
+            document.getElementById('home-child-age').innerText = "العمر: " + child.ageText;
+            document.getElementById('plan-child-name').innerText = child.name;
+            document.getElementById('plan-child-age').innerText = child.ageText;
+            document.getElementById('prog-child-name').innerText = child.name;
+            document.getElementById('prog-child-age').innerText = child.ageText;
+            updateNextAppointmentCard();
+        }
+
+        function toggleChildrenMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('children-dropdown');
+            menu.innerHTML = childrenList.map((c, i) =>
+                '<div class="child-dropdown-item" onclick="pickChild(' + i + ')">' + esc(c.name) + '</div>').join('');
+            menu.classList.toggle('show');
+        }
+
+        function pickChild(i) {
+            selectChild(i);
+            document.getElementById('children-dropdown').classList.remove('show');
+        }
+
+        document.addEventListener('click', () => {
+            document.getElementById('children-dropdown').classList.remove('show');
+        });
+
+        function renderChildren() {
+            const box = document.getElementById('children-list-container');
+            box.innerHTML = childrenList.map((c, i) => `
+                <div class="card-box">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4 style="font-size:15px; font-weight:800; color:#0f172a;">${esc(c.name)}</h4>
+                            <p style="font-size:12px; color:#64748b;">${esc(c.gender)} - ${esc(c.ageText)}</p>
+                            <p style="font-size:11px; color:#0284c7; font-weight:700;">${esc(c.stage)}</p>
+                        </div>
+                        ${i === currentChildIndex ? '<span style="font-size:11px; font-weight:800; color:#16a34a;">الطفل الحالي</span>' : ''}
+                    </div>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <button class="interactive-element" onclick="pickChild(${i}); renderChildren();" style="flex:1; background:#e0f2fe; color:#0284c7; border:1px solid #bae6fd; padding:8px; border-radius:10px; font-weight:800; font-size:12px; cursor:pointer;">اختيار</button>
+                        <button class="interactive-element" onclick="deleteChild(${i})" style="flex:1; background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:8px; border-radius:10px; font-weight:800; font-size:12px; cursor:pointer;">حذف</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        function openAddChildModal() {
+            const f = document.getElementById('add-child-form');
+            f.style.display = f.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('new-child-dob').max = new Date().toISOString().split('T')[0];
+        }
+
+        function saveNewChild() {
+            const name = document.getElementById('new-child-name').value.trim();
+            const dob = document.getElementById('new-child-dob').value;
+            const gender = document.getElementById('new-child-gender').value;
+            if (!name || !dob) { alert('الرجاء إدخال اسم الطفل وتاريخ ميلاده.'); return; }
+            if (new Date(dob) > new Date()) { alert('تاريخ الميلاد غير صحيح.'); return; }
+            if (childrenList.some(c => c.name === name)) { alert('يوجد طفل مسجل بنفس الاسم.'); return; }
+
+            childrenList.push({ name, dob, ageText: calcAge(dob), gender, stage: stageFor(dob) });
+            save();
+            document.getElementById('new-child-name').value = "";
+            document.getElementById('new-child-dob').value = "";
+            document.getElementById('add-child-form').style.display = 'none';
+            renderChildren();
+        }
+
+        function deleteChild(i) {
+            if (childrenList.length === 1) { alert('لا يمكن حذف الطفل الوحيد المسجل.'); return; }
+            const name = childrenList[i].name;
+            if (!confirm('سيتم حذف ' + name + ' وجميع مواعيده. هل أنت متأكد؟')) return;
+            childrenList.splice(i, 1);
+            appointmentsList = appointmentsList.filter(a => a.childName !== name);
+            save();
+            selectChild(0);
+            renderChildren();
+        }
+
+        // المواعيد
+        function updateNextAppointmentCard() {
+            const activeChildName = childrenList[currentChildIndex].name;
+            const childApts = appointmentsList.filter(a => a.childName === activeChildName);
+            if (childApts.length > 0) {
+                const nextApt = childApts[0];
+                document.getElementById('display-app-service').innerText = nextApt.service;
+                document.getElementById('display-app-date').innerText = nextApt.day + " - " + nextApt.time;
+                document.getElementById('display-app-branch').innerText = "الفرع: " + nextApt.branch;
+                document.getElementById('display-app-doctor').innerText = "الطبيب: " + nextApt.doctor;
+            } else {
+                document.getElementById('display-app-service').innerText = "لا توجد مواعيد قادمة";
+                document.getElementById('display-app-date').innerText = "قم بحجز موعد جديد الآن";
+                document.getElementById('display-app-branch').innerText = "";
+                document.getElementById('display-app-doctor').innerText = "";
+            }
+        }
+
+        function renderAppointments() {
+            const box = document.getElementById('appointments-list-container');
+            if (!appointmentsList.length) {
+                box.innerHTML = '<div class="card-box" style="text-align:center; color:#64748b; font-size:13px;">لا توجد مواعيد محجوزة حالياً</div>';
+                return;
+            }
+            box.innerHTML = appointmentsList.map(a => `
+                <div class="card-box">
+                    <h4 style="font-size:15px; font-weight:800; color:#0284c7; margin-bottom:4px;">${esc(a.service)}</h4>
+                    <p style="font-size:12px; color:#0f172a; font-weight:700;">الطفل: ${esc(a.childName)}</p>
+                    <p style="font-size:12px; color:#64748b;">${esc(a.day)} - ${esc(a.time)}</p>
+                    <p style="font-size:12px; color:#64748b;">${esc(a.branch)}</p>
+                    <p style="font-size:12px; color:#64748b;">الطبيب: ${esc(a.doctor)}</p>
+                    <button class="interactive-element" onclick="cancelAppointment(${a.id})" style="width:100%; background:#fff1f2; color:#e11d48; border:1px solid #fecdd3; padding:9px; border-radius:10px; font-weight:800; font-size:12px; cursor:pointer; margin-top:10px;">إلغاء الموعد</button>
+                </div>`).join('');
+        }
+
+        function cancelAppointment(id) {
+            if (!confirm('هل تريد إلغاء هذا الموعد؟')) return;
+            appointmentsList = appointmentsList.filter(a => a.id !== id);
+            save();
+            renderAppointments();
+            updateNextAppointmentCard();
+        }
+
+        // الحجز
+        function startBooking() {
+            bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
+            ['dropdown-doctor', 'dropdown-day', 'dropdown-time'].forEach(id => document.getElementById(id).value = "");
+            document.getElementById('wrapper-day').style.display = 'none';
+            document.getElementById('wrapper-time').style.display = 'none';
+            switchTab('booking-screen');
+            goToStep(1);
+        }
+
+        function goToStep(stepNumber) {
+            for (let i = 1; i <= 4; i++) document.getElementById('booking-step-' + i).style.display = 'none';
+            document.getElementById('booking-step-' + stepNumber).style.display = 'block';
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById('step-ind-' + i);
+                el.classList.remove('active', 'completed');
+                if (i < stepNumber) el.classList.add('completed');
+                if (i === stepNumber) el.classList.add('active');
+            }
+        }
+
+        function selectService(serviceName) { bookingData.service = serviceName; goToStep(2); }
+        function selectBranch(branchName) { bookingData.branch = branchName; goToStep(3); }
+
+        function onDoctorSelected() {
+            const v = document.getElementById('dropdown-doctor').value;
+            bookingData.doctor = v;
+            document.getElementById('wrapper-day').style.display = v ? 'block' : 'none';
+            if (!v) {
+                document.getElementById('wrapper-time').style.display = 'none';
+                document.getElementById('dropdown-day').value = "";
+                document.getElementById('dropdown-time').value = "";
+            }
+        }
+
+        function onDaySelected() {
+            const v = document.getElementById('dropdown-day').value;
+            bookingData.day = v;
+            document.getElementById('wrapper-time').style.display = v ? 'block' : 'none';
+            if (!v) document.getElementById('dropdown-time').value = "";
+        }
+
+        function proceedToConfirmation() {
+            bookingData.doctor = document.getElementById('dropdown-doctor').value;
+            bookingData.day = document.getElementById('dropdown-day').value;
+            bookingData.time = document.getElementById('dropdown-time').value;
+            if (!bookingData.doctor || !bookingData.day || !bookingData.time) {
+                alert('الرجاء اختيار الطبيب واليوم والموعد قبل المتابعة.'); return;
+            }
+
+            const activeChildName = childrenList[currentChildIndex].name;
+            if (appointmentsList.some(a => a.childName === activeChildName && a.service === bookingData.service)) {
+                alert('عذراً، يوجد موعد سابق للطفل في نفس القسم (' + bookingData.service + ').'); return;
+            }
+            if (appointmentsList.some(a => a.childName === activeChildName && a.day === bookingData.day && a.time === bookingData.time)) {
+                alert('عذراً، يوجد تعارض في الوقت!'); return;
+            }
+            if (appointmentsList.some(a => a.doctor === bookingData.doctor && a.day === bookingData.day && a.time === bookingData.time)) {
+                alert('هذا الموعد محجوز لدى الطبيب، الرجاء اختيار وقت آخر.'); return;
+            }
+
+            document.getElementById('conf-service').innerText = bookingData.service;
+            document.getElementById('conf-branch').innerText = bookingData.branch;
+            document.getElementById('conf-doctor').innerText = bookingData.doctor;
+            document.getElementById('conf-datetime').innerText = bookingData.day + " - " + bookingData.time;
+            goToStep(4);
+        }
+
+        function finalizeBooking() {
+            appointmentsList.unshift({
+                id: Date.now(),
+                childName: childrenList[currentChildIndex].name,
+                service: bookingData.service,
+                branch: bookingData.branch,
+                doctor: bookingData.doctor,
+                day: bookingData.day,
+                time: bookingData.time
             });
+            save();
+            updateNextAppointmentCard();
+            alert('تم حجز الموعد بنجاح!');
+            switchTab('home-screen');
         }
 
-‏        function renderChildrenListScreen() {
-‏            const container = document.getElementById('children-list-container');
-‏            container.innerHTML = "";
-‏            childrenList.forEach((child, index) => {
-‏                let avatarHTML = child.image ? `<img src="${child.image}" style="width:100%; height:100%; object-fit:cover;" />` : `<i class="fa-solid fa-child"></i>`;
-‏                container.innerHTML += `
-‏                    <div class="card-box" style="display: flex; align-items: center; justify-content: space-between;">
-‏                        <div style="display: flex; align-items: center; gap: 12px;">
-‏                            <div style="width: 45px; height: 45px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0284c7; font-size: 18px; border: 2px solid #7dd3fc; overflow:hidden;">${avatarHTML}</div>
-‏                            <div>
-‏                                <h4 style="font-size: 16px; font-weight:800;">${child.name}</h4>
-‏                                <p style="font-size: 12px; color: #64748b;">العمر: ${child.ageText} | ${child.gender}</p>
-‏                                <p style="font-size: 11px; color: #0284c7; margin-top:2px;">${child.stage}</p>
-‏                            </div>
-‏                        </div>
-‏                        <button class="interactive-element" onclick="openEditChildModal(${index})" style="background:none; border:none; color:#0284c7; cursor:pointer; font-size: 16px;"><i class="fa-solid fa-pen"></i></button>
-‏                    </div>
-                `;
-            });
+        // حساب الأم
+        function updateMomData() {
+            const name = document.getElementById('mom-name-input').value.trim();
+            const phone = document.getElementById('mom-phone-input').value.trim();
+            if (!name) { alert('الرجاء إدخال الاسم.'); return; }
+            if (!/^05\d{8}$/.test(phone)) { alert('رقم الجوال غير صحيح.'); return; }
+            document.getElementById('header-mom-name').innerText = name;
+            try { localStorage.setItem(SESSION, JSON.stringify({ name, phone })); } catch (e) {}
+            alert('تم تحديث البيانات!');
         }
 
-‏        function renderDoctorsListScreen() {
-‏            const container = document.getElementById('doctors-list-container');
-‏            container.innerHTML = "";
-‏            doctorsList.forEach((doc) => {
-‏                let avatarHTML = doc.gender === "أنثى" ? `<i class="fa-solid fa-user-doctor" style="color: #0284c7;"></i>` : (doc.img ? `<img src="${doc.img}" alt="${doc.name}" />` : `<i class="fa-solid fa-user-doctor"></i>`);
-
-‏                container.innerHTML += `
-‏                    <div class="doctor-card">
-‏                        <div class="doctor-avatar-box">${avatarHTML}</div>
-‏                        <div class="doctor-info" style="flex-grow:1;">
-‏                            <h4>${doc.name}</h4>
-‏                            <div style="font-size:12px; color:#0284c7; font-weight:700;">${doc.specialty}</div>
-‏                            <div style="font-size:11px; color:#64748b; margin-bottom:8px;">${doc.desc}</div>
-‏                            <button class="interactive-element" onclick="startBookingWithDoctor('${doc.name}')" style="background:#0284c7; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
-‏                                <i class="fa-regular fa-calendar-check"></i> حجز موعد مع الطبيب
-‏                            </button>
-‏                        </div>
-‏                    </div>
-                `;
-            });
+        // التشغيل
+        load();
+        selectChild(0);
+        const savedSession = getSession();
+        if (savedSession) {
+            applyMomData(savedSession.name, savedSession.phone);
+            document.getElementById('auth-screen').style.display = 'none';
         }
-
-‏        function startBookingWithDoctor(doctorName) {
-‏            bookingData.doctor = doctorName;
-‏            startBooking();
-        }
-
-‏        function openAddChildModal() {
-‏            editingChildIndex = null;
-‏            document.getElementById('child-form-title').innerText = "إضافة طفل جديد";
-‏            document.getElementById('input-child-name').value = "";
-‏            document.getElementById('input-child-dob').value = "";
-‏            document.getElementById('calculated-age-display').innerText = "العمر المحسوب: يرجى اختيار تاريخ الميلاد";
-‏            document.getElementById('input-child-notes').value = "";
-‏            setGender("ذكر");
-‏            tempAvatarBase64 = "";
-‏            document.getElementById('preview-avatar-icon').style.display = 'block';
-‏            document.getElementById('preview-avatar-img').style.display = 'none';
-‏            switchTab('child-form-screen');
-        }
-
-‏        function openEditChildModal(index) {
-‏            editingChildIndex = index;
-‏            const child = childrenList[index];
-‏            document.getElementById('child-form-title').innerText = "تعديل بيانات الطفل";
-‏            document.getElementById('input-child-name').value = child.name;
-‏            document.getElementById('input-child-dob').value = child.dob || "";
-‏            document.getElementById('calculated-age-display').innerText = "العمر المحسوب: " + child.ageText;
-‏            document.getElementById('input-child-notes').value = child.notes || "";
-‏            document.getElementById('input-child-stage').value = child.stage;
-‏            setGender(child.gender);
-            
-‏            tempAvatarBase64 = child.image || "";
-‏            if (tempAvatarBase64) {
-‏                document.getElementById('preview-avatar-icon').style.display = 'none';
-‏                document.getElementById('preview-avatar-img').style.display = 'block';
-‏                document.getElementById('preview-avatar-img').src = tempAvatarBase64;
-‏            } else {
-‏                document.getElementById('preview-avatar-icon').style.display = 'block';
-‏                document.getElementById('preview-avatar-img').style.display = 'none';
-            }
-‏            switchTab('child-form-screen');
-        }
-
-‏        function previewChildImage(event) {
-‏            const file = event.target.files[0];
-‏            if (file) {
-‏                const reader = new FileReader();
-‏                reader.onload = function(e) {
-‏                    tempAvatarBase64 = e.target.result;
-‏                    document.getElementById('preview-avatar-icon').style.display = 'none';
-‏                    const imgElem = document.getElementById('preview-avatar-img');
-‏                    imgElem.style.display = 'block';
-‏                    imgElem.src = tempAvatarBase64;
-                }
-‏                reader.readAsDataURL(file);
-            }
-        }
-
-‏        function setGender(gender) {
-‏            selectedGender = gender;
-‏            const mBtn = document.getElementById('gender-male-btn');
-‏            const fBtn = document.getElementById('gender-female-btn');
-‏            if (gender === 'ذكر') {
-‏                mBtn.style.backgroundColor = '#0284c7'; mBtn.style.color = 'white'; mBtn.style.borderColor = '#0284c7';
-‏                fBtn.style.backgroundColor = '#f8fafc'; fBtn.style.color = '#64748b'; fBtn.style.borderColor = '#cbd5e1';
-‏            } else {
-‏                fBtn.style.backgroundColor = '#ec4899'; fBtn.style.color = 'white'; fBtn.style.borderColor = '#ec4899';
-‏                mBtn.style.backgroundColor = '#f8fafc'; mBtn.style.color = '#64748b'; mBtn.style.borderColor = '#cbd5e1';
-            }
-        }
-
-‏        function calculateAgeAndStage() {
-‏            const dobVal = document.getElementById('input-child-dob').value;
-‏            if(!dobVal) return;
-
-‏            const dobDate = new Date(dobVal);
-‏            const today = new Date();
-‏            let years = today.getFullYear() - dobDate.getFullYear();
-‏            let months = today.getMonth() - dobDate.getMonth();
-            
-‏            if (months < 0 || (months === 0 && today.getDate() < dobDate.getDate())) {
-‏                years--; months += 12;
-            }
-
-‏            let ageString = years + " سنوات";
-‏            if (months > 0) ageString += " و " + months + " أشهر";
-‏            document.getElementById('calculated-age-display').innerText = "العمر المحسوب: " + ageString;
-
-‏            const stageSelect = document.getElementById('input-child-stage');
-‏            if (years < 3) {
-‏                stageSelect.value = "برنامج التدخل المبكر (0 - 3 سنوات)";
-‏            } else if (years >= 3 && years < 6) {
-‏                stageSelect.value = "مرحلة الطفولة المبكرة (3 - 6 سنوات)";
-‏            } else {
-‏                stageSelect.value = "مرحلة التأهيل المدرسي (6 سنوات فأكثر)";
-            }
-        }
-
-‏        function saveChildData() {
-‏            const name = document.getElementById('input-child-name').value.trim();
-‏            const dob = document.getElementById('input-child-dob').value;
-‏            const stage = document.getElementById('input-child-stage').value;
-‏            const notes = document.getElementById('input-child-notes').value.trim();
-
-‏            if (!name || !dob) { alert('الرجاء تعبئة الاسم وتاريخ الميلاد.'); return; }
-
-‏            const dobDate = new Date(dob);
-‏            const today = new Date();
-‏            let years = today.getFullYear() - dobDate.getFullYear();
-‏            let months = today.getMonth() - dobDate.getMonth();
-‏            if (months < 0 || (months === 0 && today.getDate() < dobDate.getDate())) {
-‏                years--; months += 12;
-            }
-‏            let ageText = years + " سنوات";
-‏            if (months > 0) ageText += " و " + months + " أشهر";
-
-‏            const childObj = { name, dob, ageText, gender: selectedGender, stage, notes, image: tempAvatarBase64 };
-
-‏            if (editingChildIndex === null) {
-‏                childrenList.push(childObj);
-‏                currentChildIndex = childrenList.length - 1;
-‏                alert('تم إضافة الطفل بنجاح!');
-‏            } else {
-‏                childrenList[editingChildIndex] = childObj;
-‏                currentChildIndex = editingChildIndex;
-‏                alert('تم تحديث بيانات الطفل بنجاح!');
-            }
-
-‏            updateDropdownMenuHTML();
-‏            selectChild(currentChildIndex);
-‏            switchTab('children-screen');
-        }
-
-‏        function updateDropdownMenuHTML() {
-‏            const dropdown = document.getElementById('children-dropdown');
-‏            dropdown.innerHTML = "";
-‏            childrenList.forEach((c, idx) => {
-‏                dropdown.innerHTML += `<div class="child-dropdown-item" onclick="selectChild(${idx})">${c.name}</div>`;
-            });
-        }
-
-‏        function switchTab(screenId) {
-‏            document.querySelectorAll('.app-content').forEach(s => s.classList.remove('active'));
-‏            document.getElementById(screenId).classList.add('active');
-            
-‏            const bottomNav = document.getElementById('mob-bottom-nav');
-‏            const appHeader = document.getElementById('main-app-header');
-
-‏            if(screenId === 'home-screen') {
-‏                bottomNav.classList.add('show-nav');
-‏                appHeader.style.display = 'flex';
-‏                updateNextAppointmentCard();
-‏            } else if (screenId === 'booking-screen') {
-‏                bottomNav.classList.remove('show-nav');
-‏                appHeader.style.display = 'none';
-‏            } else {
-‏                bottomNav.classList.remove('show-nav');
-‏                appHeader.style.display = 'flex';
-            }
-
-‏            if(screenId === 'children-screen') renderChildrenListScreen();
-‏            if(screenId === 'doctors-screen') renderDoctorsListScreen();
-‏            if(screenId === 'appointments-screen') renderAppointmentsListScreen();
-
-‏            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-‏        function startBooking() { 
-‏            bookingData = { service: "", branch: "", doctor: "", day: "", time: "" };
-‏            switchTab('booking-screen'); 
-‏            goToStep(1); 
-        }
-
-‏        function goToStep(stepNumber) {
-‏            for(let i=1; i<=4; i++) document.getElementById('booking-step-' + i).style.display = 'none';
-‏            document.getElementById('booking-step-' + stepNumber).style.display = 'block';
-
-‏            for(let i=1; i<=4; i++) {
-‏                const stepInd = document.getElementById('step-ind-' + i);
-‏                stepInd.classList.remove('active', 'completed');
-‏                if(i < stepNumber) stepInd.classList.add('completed');
-‏                if(i === stepNumber) stepInd.classList.add('active');
-            }
-
-‏            if(stepNumber === 3) {
-‏                document.getElementById('dropdown-doctor').value = bookingData.doctor || "";
-‏                if (bookingData.doctor) {
-‏                    document.getElementById('wrapper-day').style.display = 'block';
-‏                    document.getElementById('dropdown-day').value = bookingData.day || "";
-‏                } else {
-‏                    document.getElementById('wrapper-day').style.display = 'none';
-                }
-‏                if (bookingData.day) {
-‏                    document.getElementById('wrapper-time').style.display = 'block';
-‏                    document.getElementById('dropdown-time').value = bookingData.time || "";
-‏                } else {
-‏                    document.getElementById('wrapper-time').style.display = 'none';
-                }
-            }
-
-‏            if(stepNumber === 4) {
-‏                document.getElementById('conf-service').innerText = bookingData.service;
-‏                document.getElementById('conf-branch').innerText = bookingData.branch;
-‏                document.getElementById('conf-doctor').innerText = bookingData.doctor;
-‏                document.getElementById('conf-datetime').innerText = bookingData.day + " - " + bookingData.time;
-            }
-        }
-
-‏        function selectService(serviceName) { bookingData.service = serviceName; goToStep(2); }
-‏        function selectBranch(branchName) { bookingData.branch = branchName; goToStep(3); }
-
-‏        function onDoctorSelected() {
-‏            const docVal = document.getElementById('dropdown-doctor').value;
-‏            if(docVal !== "") {
-‏                bookingData.doctor = docVal;
-‏                document.getElementById('wrapper-day').style.display = 'block';
-‏            } else {
-‏                document.getElementById('wrapper-day').style.display = 'none';
-‏                document.getElementById('wrapper-time').style.display = 'none';
-            }
-        }
-
-‏        function onDaySelected() {
-‏            const dayVal = document.getElementById('dropdown-day').value;
-‏            if(dayVal !== "") {
-‏                bookingData.day = dayVal;
-‏                document.getElementById('wrapper-time').style.display = 'block';
-‏            } else {
-‏                document.getElementById('wrapper-time').style.display = 'none';
-            }
-        }
-
-‏        function proceedToConfirmation() {
-‏            bookingData.time = document.getElementById('dropdown-time').value;
-‏            if(!bookingData.doctor || !bookingData.day || !bookingData.time) {
-‏                alert('الرجاء اختيار الطبيب، اليوم، ووقت الموعد كاملاً.');
-‏                return;
-            }
-
-‏            const activeChildName = childrenList[currentChildIndex].name;
-
-            // الذكاء لمنع حجز نفس القسم مسبقاً
-‏            const sameServiceExist = appointmentsList.some(a => a.childName === activeChildName && a.service === bookingData.service);
-‏            if (sameServiceExist) {
-‏                alert('عذراً، يوجد موعد سابق مسجل لهذا الطفل في نفس القسم (' + bookingData.service + '). لا يمكن حجز نفس القسم مرتين.');
-‏                return;
-            }
-
-            // الذكاء لمنع التداخل بالوقت
-‏            const timeConflictExist = appointmentsList.some(a => a.childName === activeChildName && a.day === bookingData.day && a.time === bookingData.time);
-‏            if (timeConflictExist) {
-‏                alert('عذراً، يوجد تعارض في المواعيد! لدى الطفل موعد آخر مسبق في نفس اليوم والتوقيت (' + bookingData.day + ' - ' + bookingData.time + ').');
-‏                return;
-            }
-
-‏            goToStep(4);
-        }
-
-‏        function finalizeBooking() {
-‏            const activeChild = childrenList[currentChildIndex];
-
-‏            const newAppointment = {
-‏                id: Date.now(),
-‏                childName: activeChild.name,
-‏                service: bookingData.service,
-‏                branch: bookingData.branch,
-‏                doctor: bookingData.doctor,
-‏                day: bookingData.day,
-‏                time: bookingData.time
-            };
-
-‏            appointmentsList.unshift(newAppointment);
-
-‏            alert('تم حجز الموعد بنجاح للطفل: ' + activeChild.name);
-‏            switchTab('home-screen');
-        }
-
-‏        function updateMomData() {
-‏            const newName = document.getElementById('mom-name-input').value;
-‏            document.getElementById('header-mom-name').innerText = newName;
-‏            alert('تم تحديث البيانات بنجاح!');
-        }
-
-‏        function cancelAppointment(aptId) {
-‏            if(confirm('هل أنت متأكد من إلغاء هذا الموعد؟')) {
-‏                appointmentsList = appointmentsList.filter(a => a.id !== aptId);
-‏                renderAppointmentsListScreen();
-‏                updateNextAppointmentCard();
-‏                alert('تم إلغاء الموعد بنجاح.');
-            }
-        }
-
-        // تهيئة البدء
-‏        updateDropdownMenuHTML();
-‏        renderChildrenListScreen();
-‏        selectChild(0);
-‏    </script>
-‏</body>
-‏</html>
+    </script>
+</body>
+</html>
